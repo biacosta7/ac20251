@@ -12,5 +12,59 @@ public class Sinistro {
     private BigDecimal valorSinistro;
     private TipoSinistro tipo;
 
+    public String getNumero() {
+        return numero;
+    }
 
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
+
+    public LocalDateTime getDataHoraSinistro() {
+        return dataHoraSinistro;
+    }
+
+    public void setDataHoraSinistro(LocalDateTime dataHoraSinistro) {
+        this.dataHoraSinistro = dataHoraSinistro;
+    }
+
+    public LocalDateTime getDataHoraRegistro() {
+        return dataHoraRegistro;
+    }
+
+    public void setDataHoraRegistro(LocalDateTime dataHoraRegistro) {
+        this.dataHoraRegistro = dataHoraRegistro;
+    }
+
+    public String getUsuarioRegistro() {
+        return usuarioRegistro;
+    }
+
+    public void setUsuarioRegistro(String usuarioRegistro) {
+        this.usuarioRegistro = usuarioRegistro;
+    }
+
+    public BigDecimal getValorSinistro() {
+        return valorSinistro;
+    }
+
+    public void setValorSinistro(BigDecimal valorSinistro) {
+        this.valorSinistro = valorSinistro;
+    }
+
+    public TipoSinistro getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoSinistro tipo) {
+        this.tipo = tipo;
+    }
 }
