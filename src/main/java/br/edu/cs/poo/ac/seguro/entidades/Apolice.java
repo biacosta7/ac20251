@@ -7,8 +7,9 @@ public class Apolice {
     private BigDecimal valorFranquia;
     private BigDecimal valorPremio;
     private BigDecimal valorMaximoSegurado;
+    private String numero;
 
-    public Apolice(Veiculo veiculo, BigDecimal valorFranquia, BigDecimal valorPremio, BigDecimal valorMaximoSegurado){
+    Apolice(Veiculo veiculo, BigDecimal valorFranquia, BigDecimal valorPremio, BigDecimal valorMaximoSegurado){
         this.veiculo = veiculo;
         this.valorFranquia = valorFranquia;
         this.valorPremio = valorPremio;
@@ -45,5 +46,11 @@ public class Apolice {
 
     public void setValorMaximoSegurado(BigDecimal valorMaximoSegurado) {
         this.valorMaximoSegurado = valorMaximoSegurado;
+    }
+    public String getNumero(){
+        return numero;
+    }
+    public void setNumero(String numero){
+        this.numero = numero;
     }
 }

@@ -12,6 +12,15 @@ public class Sinistro {
     private BigDecimal valorSinistro;
     private TipoSinistro tipo;
 
+    public Sinistro(Veiculo veiculo, LocalDateTime dataHoraSinistro, LocalDateTime dataHoraRegistro, String usuarioRegistro, BigDecimal valorSinistro, TipoSinistro tipo){
+        this.veiculo = veiculo;
+        this.dataHoraSinistro = dataHoraSinistro;
+        this.dataHoraRegistro = dataHoraRegistro;
+        this.usuarioRegistro = usuarioRegistro;
+        this.valorSinistro = valorSinistro;
+        this.tipo = tipo;
+    }
+
     public String getNumero() {
         return numero;
     }
