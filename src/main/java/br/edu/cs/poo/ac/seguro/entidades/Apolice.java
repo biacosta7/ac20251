@@ -1,7 +1,11 @@
 package br.edu.cs.poo.ac.seguro.entidades;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Getter @Setter
 public class Apolice {
     private Veiculo veiculo;
     private BigDecimal valorFranquia;
@@ -14,43 +18,5 @@ public class Apolice {
         this.valorFranquia = valorFranquia;
         this.valorPremio = valorPremio;
         this.valorMaximoSegurado = valorMaximoSegurado;
-    }
-
-    public Veiculo getVeiculo() {
-        return veiculo;
-    }
-
-    public void setVeiculo(Veiculo veiculo) {
-        this.veiculo = veiculo;
-    }
-
-    public BigDecimal getValorFranquia() {
-        return valorFranquia;
-    }
-
-    public void setValorFranquia(BigDecimal valorFranquia) {
-        this.valorFranquia = valorFranquia;
-    }
-
-    public BigDecimal getValorPremio() {
-        return valorPremio;
-    }
-
-    public void setValorPremio(BigDecimal valorPremio) {
-        this.valorPremio = valorPremio;
-    }
-
-    public BigDecimal getValorMaximoSegurado() {
-        return valorMaximoSegurado;
-    }
-
-    public void setValorMaximoSegurado(BigDecimal valorMaximoSegurado) {
-        this.valorMaximoSegurado = valorMaximoSegurado;
-    }
-    public String getNumero(){
-        return numero;
-    }
-    public void setNumero(String numero){
-        this.numero = numero;
     }
 }

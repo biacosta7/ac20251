@@ -10,9 +10,11 @@ public class SeguradoPessoaDAO extends DAOGenerico {
 	public SeguradoPessoaDAO() {
 		cadastro = new CadastroObjetos(SeguradoPessoa.class);
 	}
+
 	public SeguradoPessoa buscar(String cpf) {
 		return (SeguradoPessoa)cadastro.buscar(cpf);
 	}
+
 	public boolean incluir(SeguradoPessoa segurado) {
 		if (buscar(segurado.getCpf()) != null) {
 			return false;
