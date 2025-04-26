@@ -21,6 +21,7 @@ public class VeiculoDAO extends DAOGenerico{
             return true;
         }
     }
+
     public boolean alterar(Veiculo veiculo) {
         if (buscar(veiculo.getPlaca()) == null) {
             return false;

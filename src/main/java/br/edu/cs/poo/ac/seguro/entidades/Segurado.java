@@ -48,6 +48,10 @@ private static final long serialVersionUID = 1L;
         return Period.between(this.dataCriacao,  LocalDate.now()).getYears();
     }
 
+    public BigDecimal getBonus() {
+        return bonus;
+    }
+
     public void creditarBonus(BigDecimal valor){
         this.bonus = this.bonus.add(valor);
     }
