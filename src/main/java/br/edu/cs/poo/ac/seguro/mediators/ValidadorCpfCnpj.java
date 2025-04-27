@@ -1,10 +1,22 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
+
 public class ValidadorCpfCnpj {
     public static boolean ehCnpjValido(String cnpj) {
-        return false;
+        if (ehNuloOuBranco(cnpj) || cnpj.length() != 14) { // !temSomenteNumeros(cnpj) ??
+            return false;
+        }
+
+        return true;
     }
+
     public static boolean ehCpfValido(String cpf) {
-        return false;
+        if (ehNuloOuBranco(cpf) || cpf.length() != 11) { // !temSomenteNumeros(cpf) ??
+            return false;
+        }
+
+        return true;
     }
 }

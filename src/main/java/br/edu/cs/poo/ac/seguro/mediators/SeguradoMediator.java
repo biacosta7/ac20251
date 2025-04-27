@@ -4,6 +4,9 @@ import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
+
 public class SeguradoMediator {
     private static SeguradoMediator instancia = new SeguradoMediator();
     private SeguradoMediator() {
@@ -20,9 +23,17 @@ public class SeguradoMediator {
     }
 
     public String validarEndereco(Endereco endereco) {
-        if (endereco == null) {
+        if (ehNuloOuBranco(endereco.getLogradouro()) ||
+                ehNuloOuBranco(endereco.getCep()) ||
+                temSomenteNumeros(endereco.getNumero()) ||
+                ehNuloOuBranco(endereco.getComplemento()) ||
+                ehNuloOuBranco(endereco.getPais()) ||
+                ehNuloOuBranco(endereco.getEstado()) ||
+                ehNuloOuBranco(endereco.getCidade())
+        ) {
             return "Endereço inválido.";
         }
+
         return null;
     }
 

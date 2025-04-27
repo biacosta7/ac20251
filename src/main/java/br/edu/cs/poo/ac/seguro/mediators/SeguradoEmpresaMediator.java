@@ -3,6 +3,10 @@ package br.edu.cs.poo.ac.seguro.mediators;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
 import br.edu.cs.poo.ac.seguro.daos.SeguradoEmpresaDAO;
 
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
+import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
+import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCnpjValido;
+
 public class SeguradoEmpresaMediator {
     private static SeguradoEmpresaMediator instancia = new SeguradoEmpresaMediator();
     private SeguradoMediator seguradoMediator = SeguradoMediator.getInstancia();
@@ -16,7 +20,7 @@ public class SeguradoEmpresaMediator {
     }
 
     public String validarCnpj(String cnpj) {
-        if (cnpj == null || cnpj.length() != 14) {
+        if (!ehCnpjValido(cnpj)) {
             return "CNPJ inválido.";
         }
         return null;
@@ -31,19 +35,19 @@ public class SeguradoEmpresaMediator {
 
     public String incluirSeguradoEmpresa(SeguradoEmpresa seg) {
         String msg = validarSeguradoEmpresa(seg);
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         boolean sucesso = dao.incluir(seg);
         if (!sucesso) {
             return "Erro ao incluir segurado empresa.";
         }
-        return null;
+        return null; 
     }
 
     public String alterarSeguradoEmpresa(SeguradoEmpresa seg) {
         String msg = validarSeguradoEmpresa(seg);
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         boolean sucesso = dao.alterar(seg);
@@ -66,27 +70,27 @@ public class SeguradoEmpresaMediator {
     }
 
     public String validarSeguradoEmpresa(SeguradoEmpresa seg) {
-        if (seg == null) {
+        if (seg != null) {
             return "Segurado inválido.";
         }
         String msg = seguradoMediator.validarNome(seg.getNome());
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         msg = seguradoMediator.validarEndereco(seg.getEndereco());
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         msg = seguradoMediator.validarDataCriacao(seg.getDataAbertura());
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         msg = validarCnpj(seg.getCnpj());
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         msg = validarFaturamento(seg.getFaturamento());
-        if (msg != null) {
+        if (!ehNuloOuBranco(msg)) {
             return msg;
         }
         return null;
