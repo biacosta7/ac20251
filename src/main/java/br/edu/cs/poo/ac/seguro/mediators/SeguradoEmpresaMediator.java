@@ -28,7 +28,7 @@ public class SeguradoEmpresaMediator {
 
     public String validarFaturamento(double faturamento) {
         if (faturamento < 0) {
-            return "Faturamento inválido.";
+            return "Faturamento deve ser maior que zero";
         }
         return null;
     }

@@ -3,7 +3,7 @@ package br.edu.cs.poo.ac.seguro.mediators;
 public class StringUtils {
     private StringUtils() {}
     public static boolean ehNuloOuBranco(String str) {
-        if(str == null || str.isEmpty()){
+        if(str == null || str.trim().isEmpty()){
             return true;
         }
         return false;

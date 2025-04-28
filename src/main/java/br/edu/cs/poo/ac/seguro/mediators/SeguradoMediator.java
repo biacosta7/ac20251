@@ -17,21 +17,14 @@ public class SeguradoMediator {
 
     public String validarNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            return "Nome inválido.";
+            return "Nome deve ser informado";
         }
         return null;
     }
 
     public String validarEndereco(Endereco endereco) {
-        if (ehNuloOuBranco(endereco.getLogradouro()) ||
-                ehNuloOuBranco(endereco.getCep()) ||
-                temSomenteNumeros(endereco.getNumero()) ||
-                ehNuloOuBranco(endereco.getComplemento()) ||
-                ehNuloOuBranco(endereco.getPais()) ||
-                ehNuloOuBranco(endereco.getEstado()) ||
-                ehNuloOuBranco(endereco.getCidade())
-        ) {
-            return "Endereço inválido.";
+        if(endereco == null){
+            return "Endereço deve ser informado";
         }
 
         return null;
@@ -41,6 +34,7 @@ public class SeguradoMediator {
         if (dataCriacao == null) {
             return "Data de criação inválida.";
         }
+
         if (dataCriacao.isAfter(LocalDate.now())) {
             return "Data de criação não pode ser futura.";
         }
