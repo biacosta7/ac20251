@@ -5,7 +5,7 @@ import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
 
 public class ValidadorCpfCnpj {
     public static boolean ehCnpjValido(String cnpj) {
-        if (ehNuloOuBranco(cnpj) || cnpj.length() != 14 || !temSomenteNumeros(cnpj)) {
+        if (ehNuloOuBranco(cnpj) || !temSomenteNumeros(cnpj)) {
             return false;
         }
 

@@ -153,10 +153,10 @@ public class TesteSeguradoPessoaMediator extends TesteMediator {
 				BigDecimal.ZERO, "07255431089", 1000.0);
 		ret = med.alterarSeguradoPessoa(seg);
 		assertEquals("Data do nascimento deve ser informada", ret);
-		//seg = new SeguradoPessoa("PAULA", end, LocalDate.now(),
-				//BigDecimal.ZERO, "07255431081", 1000.0);
-		//ret = med.alterarSeguradoPessoa(seg);
-		//assertEquals("CPF com dígito inv�lido", ret);
+		seg = new SeguradoPessoa("PAULA", end, LocalDate.now(),
+				BigDecimal.ZERO, "07255431081", 1000.0);
+		ret = med.alterarSeguradoPessoa(seg);
+		assertEquals("CPF com dígito inválido", ret);
 		seg = new SeguradoPessoa("PAULA", end, LocalDate.now(),
 				BigDecimal.ZERO, "07255431089", -12.0);
 		ret = med.alterarSeguradoPessoa(seg);

@@ -32,7 +32,7 @@ public class SeguradoMediator {
 
     public String validarDataCriacao(LocalDate dataCriacao) {
         if (dataCriacao == null) {
-            return "Data de criação inválida.";
+            return "Data da abertura deve ser informada";
         }
 
         if (dataCriacao.isAfter(LocalDate.now())) {
