@@ -2,12 +2,11 @@ package br.edu.cs.poo.ac.seguro.testes;
 
 import br.edu.cs.poo.ac.seguro.daos.VeiculoDAO;
 import br.edu.cs.poo.ac.seguro.entidades.*;
-import br.edu.cs.poo.ac.seguro.testes.SinistroDAO;
+import br.edu.cs.poo.ac.seguro.daos.SinistroDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TesteSinistroDAO extends TesteDAO{

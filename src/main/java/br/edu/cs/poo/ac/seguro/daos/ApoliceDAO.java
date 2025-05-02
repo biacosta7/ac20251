@@ -1,7 +1,6 @@
-package br.edu.cs.poo.ac.seguro.testes;
+package br.edu.cs.poo.ac.seguro.daos;
 
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
-import br.edu.cs.poo.ac.seguro.daos.DAOGenerico;
 import br.edu.cs.poo.ac.seguro.entidades.Apolice;
 
 import java.io.Serializable;

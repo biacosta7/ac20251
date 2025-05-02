@@ -4,7 +4,7 @@ import br.edu.cs.poo.ac.seguro.entidades.Veiculo;
 import org.junit.jupiter.api.Test;
 import br.edu.cs.poo.ac.seguro.entidades.CategoriaVeiculo;
 import org.junit.jupiter.api.Assertions;
-import br.edu.cs.poo.ac.seguro.testes.ApoliceDAO;
+import br.edu.cs.poo.ac.seguro.daos.ApoliceDAO;
 import br.edu.cs.poo.ac.seguro.entidades.Apolice;
 import java.io.Serializable;
 import java.math.BigDecimal;

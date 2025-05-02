@@ -84,16 +84,12 @@ public class SeguradoPessoaMediator {
             return "CPF deve ter 11 caracteres";
         }
 
-        if(!temSomenteNumeros(cpf)){
+        if(!temSomenteNumeros(cpf) || !calcularCpfValido(cpf)){
             return "CPF com dígito inválido";
         }
 
         if (!ehCpfValido(cpf)) {
             return "CPF inválido";
-        }
-
-        if(!calcularCpfValido(cpf)){
-            return "CPF com dígito inválido";
         }
 
         return null;

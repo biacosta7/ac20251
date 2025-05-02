@@ -24,4 +24,5 @@ public class Apolice implements Serializable {
         this.valorMaximoSegurado = valorMaximoSegurado;
         this.dataInicioVigencia = dataInicioVigencia;
     }
+
 }
