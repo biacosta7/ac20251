@@ -194,20 +194,15 @@ public class TesteApoliceMediator extends TesteMediator {
         RetornoInclusaoApolice ret = mediator.incluirApolice(dr);
         Assertions.assertEquals(null, ret.getMensagemErro());
         Assertions.assertEquals(numero, ret.getNumeroApolice());
-
         Veiculo velEsp = new Veiculo(placa, ano, null, sp, CategoriaVeiculo.INTERMEDIARIO);
         Veiculo vel = (Veiculo)cadVeiculo.buscar(placa);
-        System.out.println("placa: " + placa);
-        System.out.println("vel 1: " + vel.getPlaca());
         Assertions.assertNotNull(vel);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(velEsp, vel));
-
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2223.00"), new BigDecimal("1710.00"),
                 new BigDecimal("57000.00"), LocalDate.now());
+        apEsp.setNumero(numero);
         Apolice ap = (Apolice)cadastro.buscar(numero);
-        System.out.println("ap 1: " + ap);
         Assertions.assertNotNull(ap);
-        //funciona até aqui
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
     }
     @Test

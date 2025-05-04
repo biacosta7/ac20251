@@ -76,11 +76,10 @@ public class ApoliceMediator {
 				isEhLocadoraDeVeiculos = seguradoEmpresa != null && seguradoEmpresa.isEhLocadoraDeVeiculos();
 			}
 
-
 			Veiculo veiculo = daoVel.buscar(dados.getPlaca());
-			BigDecimal premio = calcularPremio(dados.getAno(), dados.getCodigoCategoria(), seguradoAtual, isEhLocadoraDeVeiculos);
+			BigDecimal premio = calcularPremio(seguradoAtual, isEhLocadoraDeVeiculos, dados).setScale(2);
 			BigDecimal percentual = new BigDecimal("1.3"); // 130% = 1.3
-			BigDecimal franquia = premio.multiply(percentual);
+			BigDecimal franquia = premio.multiply(percentual).setScale(2);
 
 			//verificar data se é sempre LocalDate.now()
 			Apolice novaApolice = new Apolice(veiculo, franquia, premio, dados.getValorMaximoSegurado(), LocalDate.now());
@@ -139,8 +138,6 @@ public class ApoliceMediator {
 		daoVel = new VeiculoDAO();
 		daoVel = new VeiculoDAO();
 
-		if(dados == null)
-			return "Dados do veículo devem ser informados";
 
 		if(dados.getPlaca() == null)
 			return "Placa do veículo deve ser informada";
@@ -227,7 +224,6 @@ public class ApoliceMediator {
 				return "Apólice já existente para ano atual e veículo";
 			}
 
-
 		} else {
 
 			Segurado seguradoAtual = null;
@@ -288,7 +284,16 @@ public class ApoliceMediator {
 	}
 
 	private BigDecimal obterValorMaximoPermitido(int ano, int codigoCat) {
-		return null;
+		for (CategoriaVeiculo categoria : CategoriaVeiculo.values()) {
+			if (categoria.getCodigo() == codigoCat) {
+				for (PrecoAno precoAno : categoria.getPrecosAnos()) {
+					if (precoAno.getAno() == ano) {
+						return BigDecimal.valueOf(precoAno.getPreco());
+					}
+				}
+			}
+		}
+		return BigDecimal.ZERO;
 	}
 
 	private String gerarNumero(String cpfOuCnpj, String placa) {
@@ -301,9 +306,10 @@ public class ApoliceMediator {
 		return null;
 	}
 
-	private BigDecimal calcularPremio(int ano, int codigoCat, Segurado segurado, boolean isEhLocadoraDeVeiculos){
+	private BigDecimal calcularPremio(Segurado segurado, boolean isEhLocadoraDeVeiculos, DadosVeiculo dados){
 		BigDecimal percentual = new BigDecimal("0.03"); // 3%
-		BigDecimal vpa = percentual.multiply(obterValorMaximoPermitido(ano, codigoCat));
+
+		BigDecimal vpa = percentual.multiply(dados.getValorMaximoSegurado());
 		BigDecimal vpb;
 
 		if (isEhLocadoraDeVeiculos){
@@ -319,6 +325,5 @@ public class ApoliceMediator {
 			return vpc;
 		else
 			return BigDecimal.ZERO;
-
 	}
 }
