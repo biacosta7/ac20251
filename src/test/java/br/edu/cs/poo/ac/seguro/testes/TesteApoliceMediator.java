@@ -255,6 +255,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2223.00"),
                 new BigDecimal("1710.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
     }
@@ -284,6 +285,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2223.00"),
                 new BigDecimal("1710.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
     }
@@ -310,6 +312,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2223.00"),
                 new BigDecimal("1610.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
         SeguradoPessoa spBusc = (SeguradoPessoa)cadPessoa.buscar(cpf);
@@ -339,6 +342,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2667.60"),
                 new BigDecimal("1952.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
         SeguradoEmpresa seBusc = (SeguradoEmpresa)cadEmpresa.buscar(cnpj);
@@ -368,6 +372,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2223.00"),
                 new BigDecimal("1610.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
         SeguradoPessoa spBusc = (SeguradoPessoa)cadPessoa.buscar(cpf);
@@ -397,6 +402,7 @@ public class TesteApoliceMediator extends TesteMediator {
         Apolice apEsp = new Apolice(velEsp, new BigDecimal("2667.60"),
                 new BigDecimal("1952.00"), new BigDecimal("57000.00"), LocalDate.now());
         Apolice ap = (Apolice)cadastro.buscar(numero);
+        apEsp.setNumero(numero); // alterar
         Assertions.assertNotNull(ap);
         Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(apEsp, ap));
         SeguradoEmpresa seBusc = (SeguradoEmpresa)cadEmpresa.buscar(cnpj);
