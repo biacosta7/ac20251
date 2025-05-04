@@ -108,7 +108,6 @@ public class ApoliceMediator {
 				BigDecimal bonusAdicional = premio.multiply(new BigDecimal("0.3")).setScale(2);
 				seguradoAtual.creditarBonus(bonusAdicional);
 
-				// atualiza no DAO correspondente com instanceof para evitar exceção
 				if (isEhLocadoraDeVeiculos && seguradoAtual instanceof SeguradoEmpresa) {
 					seguradoEmpresaDAO.alterar((SeguradoEmpresa) seguradoAtual);
 				} else if (!isEhLocadoraDeVeiculos && seguradoAtual instanceof SeguradoPessoa) {
@@ -129,22 +128,6 @@ public class ApoliceMediator {
 		daoApo = new ApoliceDAO();
 		return daoApo.buscar(numero);
 	}
-	/*
-	 * A exclus�o n�o � permitida quando: 
-	 * 1- O n�mero for nulo ou branco.
-	 * 2- N�o existir ap�lice com o n�mero recebido.
-	 * 3- Existir sinistro cadastrado no mesmo ano 
-	 *    da ap�lice (comparar ano da data e hora do sinistro
-	 *    com ano da data de in�cio de vig�ncia da ap�lice) 
-	 *    para o mesmo ve�culo (comparar o ve�culo do sinistro
-	 *    com o ve�culo da ap�lice usando equals na classe ve�culo,
-	 *    que deve ser implementado). Para obter os sinistros 
-	 *    cadastrados, usar o m�todo buscarTodos do dao de sinistro, 
-	 *    implementado para contemplar a quest�o da bonifica��o
-	 *    no m�todo de incluir ap�lice.
-	 *    � poss�vel usar LOMBOK para implementa��o implicita do
-	 *    equals na classe Veiculo.
-	 */
 	public String excluirApolice(String numero) {
 		if (numero == null || numero.isBlank()){
 			return "Número deve ser informado";
@@ -170,13 +153,7 @@ public class ApoliceMediator {
 
 		return null;
 	}
-	/*
-	 * Daqui para baixo est�o SUGEST�ES de m�todos que propiciariam
-	 * mais reuso e organiza��o de c�digo.
-	 * Eles poderiam ser chamados pelo m�todo de inclus�o de ap�lice.
-	 * Mas...� apenas uma sugest�o. Voc�s podem fazer o c�digo da 
-	 * maneira que acharem pertinente. 
-	 */
+
 	private String validarTodosDadosVeiculo(DadosVeiculo dados) {
 		Segurado segurado;
 
