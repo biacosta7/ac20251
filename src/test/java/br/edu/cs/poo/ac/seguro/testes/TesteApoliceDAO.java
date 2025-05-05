@@ -22,7 +22,7 @@ public class TesteApoliceDAO extends TesteDAO{
         String numero = "000000";
         cadastro.incluir(new Veiculo(placa, 2000, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
-        cadastro.incluir(new Apolice(ve, new BigDecimal("19.99"), null, null, null), numero);
+        cadastro.incluir(new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null), numero);
         Apolice apolice = dao.buscar(numero);
         Assertions.assertNotNull(apolice);
     }
@@ -32,7 +32,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2001, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "000001";
-        cadastro.incluir((Serializable)new Apolice(ve, new BigDecimal("19.99"), null, null, null), numero);
+        cadastro.incluir((Serializable)new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null), numero);
         Apolice apolice = dao.buscar("11000000");
         Assertions.assertNull(apolice);
     }
@@ -42,7 +42,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2001, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "000002";
-        cadastro.incluir((Serializable)new Apolice(ve, new BigDecimal("19.99"), null, null, null), numero);
+        cadastro.incluir((Serializable)new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null), numero);
         boolean ret = dao.excluir(numero);
         Assertions.assertTrue(ret);
     }
@@ -52,7 +52,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "000003";
-        cadastro.incluir((Serializable)new Apolice(ve, new BigDecimal("19.99"), null, null, null), numero);
+        cadastro.incluir((Serializable)new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null), numero);
         boolean ret = dao.excluir("31000000");
         Assertions.assertFalse(ret);
     }
@@ -62,7 +62,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "000004";
-        Apolice novaApolice = new Apolice(ve, new BigDecimal("19.99"), null, null, null);
+        Apolice novaApolice = new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null);
         novaApolice.setNumero(numero);
         boolean ret = dao.incluir(novaApolice);
         Assertions.assertTrue(ret);
@@ -76,7 +76,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "000005";
-        Apolice apolice = new Apolice(ve, new BigDecimal("19.99"), null, null, null);
+        Apolice apolice = new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null);
         apolice.setNumero(numero);
         cadastro.incluir((Serializable)apolice, numero);
         boolean ret = dao.incluir(apolice);
@@ -89,7 +89,7 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "0000006";
-        boolean ret = dao.alterar(new Apolice(ve, new BigDecimal("19.99"), null, null, null));
+        boolean ret = dao.alterar(new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null));
         Assertions.assertFalse(ret);
         Apolice apolice = dao.buscar(numero);
         Assertions.assertNull(apolice);
@@ -101,9 +101,9 @@ public class TesteApoliceDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
         String numero = "0000007";
-        Apolice apolice = new Apolice(ve, new BigDecimal("19.99"), null, null, null);
+        Apolice apolice = new Apolice(numero, ve, new BigDecimal("19.99"), null, null, null);
         cadastro.incluir((Serializable)apolice, numero);
-        apolice = new Apolice(ve, new BigDecimal("19.90"), null, null, null);
+        apolice = new Apolice(numero, ve, new BigDecimal("19.90"), null, null, null);
         apolice.setNumero(numero);
         boolean ret = dao.alterar(apolice);
         Assertions.assertTrue(ret);

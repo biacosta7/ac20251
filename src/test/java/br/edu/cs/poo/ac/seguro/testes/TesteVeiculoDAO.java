@@ -13,13 +13,13 @@ public class TesteVeiculoDAO extends TesteDAO {
 	protected Class getClasse() {
 		return Veiculo.class;
 	}
-	
+
 	@Test
 	public void teste01() {
 		String placa = "00000000";
 		cadastro.incluir(new Veiculo(placa, 2000, null, null, CategoriaVeiculo.BASICO), placa);
 		Veiculo ve = dao.buscar(placa);
-		Assertions.assertNotNull(ve); 
+		Assertions.assertNotNull(ve);
 	}
 	@Test
 	public void teste02() {
@@ -44,16 +44,16 @@ public class TesteVeiculoDAO extends TesteDAO {
 	}
 	@Test
 	public void teste05() {
-		String placa = "40000000";		
-		boolean ret = dao.incluir(new Veiculo(placa, 2004, null, null, CategoriaVeiculo.BASICO));		
+		String placa = "40000000";
+		boolean ret = dao.incluir(new Veiculo(placa, 2004, null, null, CategoriaVeiculo.BASICO));
 		Assertions.assertTrue(ret);
 		Veiculo ve = dao.buscar(placa);
-		Assertions.assertNotNull(ve);		
+		Assertions.assertNotNull(ve);
 	}
-	
+
 	@Test
 	public void teste06() {
-		String placa = "50000000";		
+		String placa = "50000000";
 		Veiculo ve = new Veiculo(placa, 2005, null, null, CategoriaVeiculo.BASICO);
 		cadastro.incluir(ve, placa);
 		boolean ret = dao.incluir(ve);
@@ -61,16 +61,16 @@ public class TesteVeiculoDAO extends TesteDAO {
 	}
 	@Test
 	public void teste07() {
-		String placa = "60000000";			
-		boolean ret = dao.alterar(new Veiculo(placa, 2006, null, null, CategoriaVeiculo.BASICO));		
+		String placa = "60000000";
+		boolean ret = dao.alterar(new Veiculo(placa, 2006, null, null, CategoriaVeiculo.BASICO));
 		Assertions.assertFalse(ret);
 		Veiculo ve = dao.buscar(placa);
-		Assertions.assertNull(ve);		
+		Assertions.assertNull(ve);
 	}
-	
+
 	@Test
 	public void teste08() {
-		String placa = "70000000";			
+		String placa = "70000000";
 		Veiculo ve = new Veiculo(placa, 2007, null, null, CategoriaVeiculo.BASICO);
 		cadastro.incluir(ve, placa);
 		ve = new Veiculo(placa, 2008, null, null, CategoriaVeiculo.ESPORTIVO);

@@ -22,7 +22,7 @@ public class TesteSinistroDAO extends TesteDAO{
         String numero = "000000";
         cadastro.incluir(new Veiculo(placa, 2000, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
-        cadastro.incluir(new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
+        cadastro.incluir(new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
 
         Sinistro sinistro = dao.buscar(numero);
         Assertions.assertNotNull(sinistro);
@@ -35,7 +35,7 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2001, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        cadastro.incluir((Serializable)new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
+        cadastro.incluir((Serializable)new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
         Sinistro sinistro = dao.buscar("11000000");
 
         Assertions.assertNull(sinistro);
@@ -47,7 +47,7 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2002, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        cadastro.incluir((Serializable)new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
+        cadastro.incluir((Serializable)new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
         boolean ret = dao.excluir(numero);
         Assertions.assertTrue(ret);
     }
@@ -58,7 +58,7 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2003, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        cadastro.incluir((Serializable)new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
+        cadastro.incluir((Serializable)new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO), numero);
         boolean ret = dao.excluir("31000000");
         Assertions.assertFalse(ret);
     }
@@ -68,7 +68,7 @@ public class TesteSinistroDAO extends TesteDAO{
         String numero = "000004";
         daoV.incluir(new Veiculo(placa, 2004, null, null, CategoriaVeiculo.BASICO));
         Veiculo ve = daoV.buscar(placa);
-        Sinistro sinistro = new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(),null, null, TipoSinistro.COLISAO);
+        Sinistro sinistro = new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(),null, null, TipoSinistro.COLISAO);
         sinistro.setNumero(numero);
         boolean ret = dao.incluir(sinistro);
         Assertions.assertTrue(ret);
@@ -83,7 +83,7 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2005, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        Sinistro sinistro = new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO);
+        Sinistro sinistro = new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO);
         sinistro.setNumero(numero);
 
         cadastro.incluir((Serializable)sinistro, numero);
@@ -99,7 +99,7 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2006, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        boolean ret = dao.alterar(new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(),null, null, TipoSinistro.COLISAO));
+        boolean ret = dao.alterar(new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(),null, null, TipoSinistro.COLISAO));
         Assertions.assertFalse(ret);
         Sinistro sinistro = dao.buscar(numero);
         Assertions.assertNull(sinistro);
@@ -112,10 +112,10 @@ public class TesteSinistroDAO extends TesteDAO{
         cadastro.incluir(new Veiculo(placa, 2007, null, null, CategoriaVeiculo.BASICO), placa);
         Veiculo ve = daoV.buscar(placa);
 
-        Sinistro sinistro = new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO);
+        Sinistro sinistro = new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.COLISAO);
         cadastro.incluir((Serializable)sinistro, numero);
 
-        sinistro = new Sinistro(ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.INCENDIO);
+        sinistro = new Sinistro(numero, ve, LocalDateTime.now(), LocalDateTime.now(), null, null, TipoSinistro.INCENDIO);
         sinistro.setNumero(numero);
 
         boolean ret = dao.alterar(sinistro);

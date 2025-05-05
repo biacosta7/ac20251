@@ -150,7 +150,7 @@ public class SeguradoEmpresaMediator {
         }
         msg = seguradoMediator.validarDataCriacao(seg.getDataAbertura());
         if (!ehNuloOuBranco(msg)) {
-            return msg;
+            return "Data da abertura deve ser informada";
         }
         msg = validarCnpj(seg.getCnpj());
         if (!ehNuloOuBranco(msg)) {

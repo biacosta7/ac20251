@@ -21,7 +21,6 @@ public class TesteSeguradoMediator {
         resultado = med.validarNome(null);
         assertEquals(msg, resultado);
     }
-
     @Test
     public void teste01() {
         Endereco endereco = null;

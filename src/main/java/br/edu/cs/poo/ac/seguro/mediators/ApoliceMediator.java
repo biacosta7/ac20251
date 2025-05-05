@@ -82,9 +82,10 @@ public class ApoliceMediator {
 			BigDecimal percentual = new BigDecimal("1.3"); // 130% = 1.3
 			BigDecimal vpb = premio.add(seguradoAtual.getBonus().divide(BigDecimal.TEN));
 			BigDecimal franquia = percentual.multiply(vpb).setScale(2); // Calcular franquia como 130% de VPB.
+			String numero = gerarNumero(dados.getCpfOuCnpj(), dados.getPlaca());
 
 			//verificar data se é sempre LocalDate.now()
-			Apolice novaApolice = new Apolice(veiculo, franquia, premio, dados.getValorMaximoSegurado(), LocalDate.now());
+			Apolice novaApolice = new Apolice(numero, veiculo, franquia, premio, dados.getValorMaximoSegurado(), LocalDate.now());
 			novaApolice.setNumero(numeroApolice);
 
 			daoApo.incluir(novaApolice);
@@ -233,6 +234,9 @@ public class ApoliceMediator {
 		if (cpfOuCnpj.length() == 11) {
 			String msgCpf = seguradoPessoaMediator.validarCpf(cpfOuCnpj);
 			if (msgCpf != null) {
+				if(msgCpf.equals("CPF com dígito inválido")){
+					return "CPF inválido";
+				}
 				return msgCpf;
 			}
 			seguradoPessoa = seguradoPessoaDAO.buscar(cpfOuCnpj);
@@ -243,6 +247,9 @@ public class ApoliceMediator {
 		} else if (cpfOuCnpj.length() == 14) {
 			String msgCnpj = empresaMediator.validarCnpj(cpfOuCnpj);
 			if (msgCnpj != null) {
+				if(msgCnpj.equals("CNPJ com dígito inválido")){
+					return "CNPJ inválido";
+				}
 				return msgCnpj;
 			}
 			seguradoEmpresa = seguradoEmpresaDAO.buscar(cpfOuCnpj);
