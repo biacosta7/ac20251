@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Sinistro implements Serializable {
+public class Sinistro implements Serializable, Registro {
     private static final long serialVersionUID = 1L;
     private String numero;
     private Veiculo veiculo;
@@ -17,6 +17,12 @@ public class Sinistro implements Serializable {
     private String usuarioRegistro;
     private BigDecimal valorSinistro;
     private TipoSinistro tipo;
+    private int sequencial;
+    private String numeroApolice;
+
+    public String getIdUnico(){
+        return numero;
+    }
 
     public Sinistro(Veiculo veiculo, LocalDateTime dataHoraSinistro, LocalDateTime dataHoraRegistro, String usuarioRegistro, BigDecimal valorSinistro, TipoSinistro tipo){
         this.veiculo = veiculo;

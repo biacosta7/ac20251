@@ -1,12 +1,9 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
-import br.edu.cs.poo.ac.seguro.daos.SeguradoEmpresaDAO;
 
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
-import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCnpjValido;
-import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCpfValido;
 
 public class SeguradoEmpresaMediator {
     private static SeguradoEmpresaMediator instancia = new SeguradoEmpresaMediator();

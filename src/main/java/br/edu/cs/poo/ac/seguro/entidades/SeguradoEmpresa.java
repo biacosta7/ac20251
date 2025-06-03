@@ -16,6 +16,10 @@ public class SeguradoEmpresa extends Segurado{
 
     }
 
+    public String getIdUnico(){
+        return cnpj;
+    }
+
     public String getCnpj() {
         return cnpj;
     }
@@ -42,5 +46,9 @@ public class SeguradoEmpresa extends Segurado{
 
     public void setDataAbertura(LocalDate dataAbertura){
         this.setDataCriacao(dataAbertura);
+    }
+
+    public boolean isEmpresa(){
+        return true;
     }
 }

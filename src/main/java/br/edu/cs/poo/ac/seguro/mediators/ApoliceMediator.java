@@ -1,19 +1,11 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import br.edu.cs.poo.ac.seguro.daos.ApoliceDAO;
-import br.edu.cs.poo.ac.seguro.daos.SeguradoEmpresaDAO;
-import br.edu.cs.poo.ac.seguro.daos.SeguradoPessoaDAO;
-import br.edu.cs.poo.ac.seguro.daos.SinistroDAO;
-import br.edu.cs.poo.ac.seguro.daos.VeiculoDAO;
 import br.edu.cs.poo.ac.seguro.entidades.*;
 
-import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCpfValido;
-import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCnpjValido;
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
 
 public class ApoliceMediator {

@@ -6,20 +6,22 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class Veiculo implements Serializable{
+public class Veiculo implements Serializable, Registro{
     private static final long serialVersionUID = 1L;
     private String placa;
     private int ano;
-    private SeguradoEmpresa proprietarioEmpresa;
-    private SeguradoPessoa proprietarioPessoa;
     private CategoriaVeiculo categoria;
+    private Segurado proprietario;
 
-    public Veiculo(String placa, int ano, SeguradoEmpresa proprietarioEmpresa, SeguradoPessoa proprietarioPessoa, CategoriaVeiculo categoria){
+    public String getIdUnico(){
+        return placa;
+    }
+
+    public Veiculo(String placa, int ano, CategoriaVeiculo categoria, Segurado proprietario){
         this.placa = placa;
         this.ano = ano;
-        this.proprietarioEmpresa = proprietarioEmpresa;
-        this.proprietarioPessoa = proprietarioPessoa;
         this.categoria = categoria;
+        this.proprietario = proprietario;
     }
 
     public boolean equals(Object obj) {

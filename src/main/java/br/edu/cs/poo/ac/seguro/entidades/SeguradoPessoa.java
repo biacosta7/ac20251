@@ -15,6 +15,9 @@ public class SeguradoPessoa extends Segurado implements Serializable {
         this.cpf = cpf;
         this.renda = renda;
     }
+    public String getIdUnico(){
+        return cpf;
+    }
     public String getCpf(){
         return cpf;
     }
@@ -29,5 +32,8 @@ public class SeguradoPessoa extends Segurado implements Serializable {
     }
     public void setDataNascimento(LocalDate dataNascimento){
         this.setDataCriacao(dataNascimento);
+    }
+    public boolean isEmpresa(){
+        return false;
     }
 }

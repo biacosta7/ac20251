@@ -1,6 +1,5 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
-import br.edu.cs.poo.ac.seguro.daos.SeguradoPessoaDAO;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoPessoa;
 
 import java.time.LocalDate;

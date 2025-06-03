@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.io.Serializable;
 
-public class Segurado implements Serializable {
+public abstract class Segurado implements Serializable, Registro {
 private static final long serialVersionUID = 1L;
 
     private String nome;
@@ -59,4 +59,6 @@ private static final long serialVersionUID = 1L;
     public void debitarBonus(BigDecimal valor){
         this.bonus = this.bonus.subtract(valor);
     }
+
+    abstract public boolean isEmpresa();
 }
