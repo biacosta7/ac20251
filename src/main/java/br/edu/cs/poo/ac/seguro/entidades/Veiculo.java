@@ -10,18 +10,18 @@ public class Veiculo implements Serializable, Registro{
     private static final long serialVersionUID = 1L;
     private String placa;
     private int ano;
-    private CategoriaVeiculo categoria;
     private Segurado proprietario;
-
-    public String getIdUnico(){
-        return placa;
-    }
+    private CategoriaVeiculo categoria;
 
     public Veiculo(String placa, int ano, CategoriaVeiculo categoria, Segurado proprietario){
         this.placa = placa;
         this.ano = ano;
-        this.categoria = categoria;
         this.proprietario = proprietario;
+        this.categoria = categoria;
+    }
+
+    public String getIdUnico(){
+        return placa;
     }
 
     public boolean equals(Object obj) {
