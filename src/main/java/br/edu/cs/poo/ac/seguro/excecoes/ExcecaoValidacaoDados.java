@@ -6,11 +6,20 @@ import java.util.List;
 public class ExcecaoValidacaoDados extends Exception {
     private List<String> mensagens;
 
-    public ExcecaoValidacaoDados(List<String> mensagens) {
-        this.mensagens = new ArrayList<>(mensagens); // Garante que a lista é uma cópia
+    public ExcecaoValidacaoDados() {
+        super("Erros de validação encontrados");
+        this.mensagens = new ArrayList<>();
     }
 
     public List<String> getMensagens() {
         return mensagens;
+    }
+
+    public void adicionarMensagem(String mensagem) {
+        this.mensagens.add(mensagem);
+    }
+
+    public boolean temErros() {
+        return !mensagens.isEmpty();
     }
 }

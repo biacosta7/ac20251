@@ -13,7 +13,8 @@ public class Veiculo implements Serializable, Registro{
     private Segurado proprietario;
     private CategoriaVeiculo categoria;
 
-    public Veiculo(String placa, int ano, CategoriaVeiculo categoria, Segurado proprietario){
+
+    public Veiculo(String placa, int ano, Segurado proprietario, CategoriaVeiculo categoria){
         this.placa = placa;
         this.ano = ano;
         this.proprietario = proprietario;

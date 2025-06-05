@@ -2,9 +2,12 @@ package br.edu.cs.poo.ac.seguro.daos;
 
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 import br.edu.cs.poo.ac.seguro.entidades.Registro;
-import br.edu.cs.poo.ac.seguro.entidades.Sinistro;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class DAOGenerico <T extends Registro>{
     private CadastroObjetos cadastro;
@@ -48,10 +51,13 @@ public abstract class DAOGenerico <T extends Registro>{
 
     public Registro[] buscarTodos() {
         Serializable[] serializables = cadastro.buscarTodos();
-        Registro[] registros = new Registro[serializables.length];
-        for (int i = 0; i < serializables.length; i++) {
-            registros[i] = (Registro) serializables[i];
+        if (serializables == null || serializables.length == 0) {
+            return new Registro[0];
         }
-        return registros;
+        List<Registro> listaOrdenada = Arrays.stream(serializables)
+                .map(s -> (Registro) s)
+                .sorted(Comparator.comparing(Registro::getIdUnico))
+                .collect(Collectors.toList());
+        return listaOrdenada.toArray(new Registro[0]);
     }
 }

@@ -1,9 +1,12 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
+import br.edu.cs.poo.ac.seguro.daos.SeguradoEmpresaDAO;
 
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.temSomenteNumeros;
+import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCnpjValido;
+import static br.edu.cs.poo.ac.seguro.mediators.ValidadorCpfCnpj.ehCpfValido;
 
 public class SeguradoEmpresaMediator {
     private static SeguradoEmpresaMediator instancia = new SeguradoEmpresaMediator();
@@ -59,7 +62,7 @@ public class SeguradoEmpresaMediator {
 
     public String validarCnpj(String cnpj) {
         //if (!ehCnpjValido(cnpj)) {
-            //return "CNPJ inválido.";
+        //return "CNPJ inválido.";
         //
 
         if (ehNuloOuBranco(cnpj)) {
@@ -100,7 +103,7 @@ public class SeguradoEmpresaMediator {
         if (!sucesso) {
             return "Erro ao incluir segurado empresa.";
         }
-        return null; 
+        return null;
     }
 
     public String alterarSeguradoEmpresa(SeguradoEmpresa seg) {
@@ -147,7 +150,7 @@ public class SeguradoEmpresaMediator {
         }
         msg = seguradoMediator.validarDataCriacao(seg.getDataAbertura());
         if (!ehNuloOuBranco(msg)) {
-            return msg;
+            return "Data da abertura deve ser informada";
         }
         msg = validarCnpj(seg.getCnpj());
         if (!ehNuloOuBranco(msg)) {
