@@ -1,12 +1,13 @@
 package br.edu.cs.poo.ac.seguro.mediators;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode; // Make sure this import is present
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList; // Importe ArrayList
-import java.util.Arrays;    // Importe Arrays
-import java.util.List;      // Importe List
-import java.util.stream.Collectors; // Importe Collectors
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import br.edu.cs.poo.ac.seguro.daos.*;
 import br.edu.cs.poo.ac.seguro.entidades.*;
@@ -14,17 +15,14 @@ import br.edu.cs.poo.ac.seguro.entidades.*;
 import static br.edu.cs.poo.ac.seguro.mediators.StringUtils.ehNuloOuBranco;
 
 public class ApoliceMediator {
-	// Note: a instância Singleton deve ser única. apoliceoMediator e instancia estão redundantes.
-	// Mantenha apenas uma instância estática e o método getInstancia.
 	private static ApoliceMediator instancia = new ApoliceMediator();
 	private SeguradoPessoaDAO daoSegPes;
 	private SeguradoEmpresaDAO daoSegEmp;
 	private VeiculoDAO daoVel;
 	private ApoliceDAO daoApo;
-	private SinistroDAO daoSin; // Melhor inicializar no construtor ou em cada método se for para ser fresco
+	private SinistroDAO daoSin;
 
 	private ApoliceMediator() {
-		// Inicialize os DAOs aqui para garantir que não sejam nulos ou recriados desnecessariamente
 		this.daoSegPes = new SeguradoPessoaDAO();
 		this.daoSegEmp = new SeguradoEmpresaDAO();
 		this.daoVel = new VeiculoDAO();
@@ -61,18 +59,12 @@ public class ApoliceMediator {
 		String msg = validarTodosDadosVeiculo(dados);
 
 		if(msg == null){
-			// Os DAOs devem ser inicializados no construtor Singleton
-			// daoApo = new ApoliceDAO(); // Remova esta linha se inicializar no construtor
 			String numeroApolice = gerarNumero(dados.getCpfOuCnpj(), dados.getPlaca());
 
 			SeguradoPessoa seguradoPessoa = null;
 			SeguradoEmpresa seguradoEmpresa = null;
 			Segurado seguradoAtual = null;
 			boolean isEhLocadoraDeVeiculos;
-
-			// Os DAOs devem ser usados a partir das variáveis de instância
-			// SeguradoPessoaDAO seguradoPessoaDAO = new SeguradoPessoaDAO(); // Remova esta linha
-			// SeguradoEmpresaDAO seguradoEmpresaDAO = new SeguradoEmpresaDAO(); // Remova esta linha
 
 			seguradoPessoa = daoSegPes.buscar(dados.getCpfOuCnpj());
 			if (seguradoPessoa != null) {
@@ -85,37 +77,38 @@ public class ApoliceMediator {
 			}
 
 			Veiculo veiculo = daoVel.buscar(dados.getPlaca());
-			BigDecimal premio = calcularPremio(seguradoAtual, isEhLocadoraDeVeiculos, dados).setScale(2);
-			BigDecimal percentual = new BigDecimal("1.3"); // 130% = 1.3
-			BigDecimal vpb = premio.add(seguradoAtual.getBonus().divide(BigDecimal.TEN));
-			BigDecimal franquia = percentual.multiply(vpb).setScale(2); // Calcular franquia como 130% de VPB.
 
-			//verificar data se é sempre LocalDate.now()
+			// Define a common scale and rounding mode for consistency
+			int scale = 2;
+			RoundingMode roundingMode = RoundingMode.HALF_UP;
+
+			BigDecimal premio = calcularPremio(seguradoAtual, isEhLocadoraDeVeiculos, dados).setScale(scale, roundingMode);
+			BigDecimal percentual = new BigDecimal("1.3"); // 130% = 1.3
+
+			// FIX: Apply setScale and RoundingMode to the division here
+			// This line was causing the error previously
+			BigDecimal bonusDividido = seguradoAtual.getBonus().divide(BigDecimal.TEN, scale, roundingMode);
+			BigDecimal vpb = premio.add(bonusDividido);
+
+			BigDecimal franquia = percentual.multiply(vpb).setScale(scale, roundingMode); // Calcular franquia como 130% de VPB.
+
 			Apolice novaApolice = new Apolice(numeroApolice, veiculo, franquia, premio, dados.getValorMaximoSegurado(), LocalDate.now());
 
 			daoApo.incluir(novaApolice);
-			// SinistroDAO sinistroDAO = new SinistroDAO(); // Remova esta linha
 
-			// CORREÇÃO AQUI: Converter Registro[] para Sinistro[]
-			Registro[] todosSinistrosRegistros = daoSin.buscarTodos(); // Isso deve retornar Registro[]
-			// Converte o array de Registro[] para List<Sinistro> e depois para Sinistro[]
+			Registro[] todosSinistrosRegistros = daoSin.buscarTodos();
 			List<Sinistro> listaSinistros = Arrays.stream(todosSinistrosRegistros)
-					.filter(s -> s instanceof Sinistro) // Garantia de tipo
+					.filter(s -> s instanceof Sinistro)
 					.map(s -> (Sinistro) s)
 					.collect(Collectors.toList());
-			Sinistro[] todosSinistros = listaSinistros.toArray(new Sinistro[0]); // Converte a lista de volta para array de Sinistro
 
 			int anoAnterior = LocalDateTime.now().getYear() - 1;
 
 			boolean houveSinistro = false;
-			for (Sinistro sin : todosSinistros) {
+			for (Sinistro sin : listaSinistros) {
 				Veiculo v = sin.getVeiculo();
 				if (v != null) {
-					// Melhorar esta condição: um sinistro cobre um veículo.
-					// Aparentemente, a intenção é ver se HOUVE SINISTRO PARA O VEÍCULO DA APÓLICE NO ANO ANTERIOR.
-					// Se a apólice é para um VEÍCULO, o sinistro também precisa ser associado a esse VEÍCULO.
-					// E também ao proprietário atual.
-					if (sin.getDataHoraSinistro().getYear() == anoAnterior && sin.getVeiculo().equals(veiculo)) { // Adicione sin.getVeiculo().equals(veiculo)
+					if (sin.getDataHoraSinistro().getYear() == anoAnterior && sin.getVeiculo().equals(veiculo)) {
 						houveSinistro = true;
 						break;
 					}
@@ -123,14 +116,13 @@ public class ApoliceMediator {
 			}
 
 			if (!houveSinistro) {
-				// BigDecimal bonusAtual = seguradoAtual.getBonus(); // Não é necessário buscar, já tem seguradoAtual
-				BigDecimal bonusAdicional = premio.multiply(new BigDecimal("0.3")).setScale(2);
+				BigDecimal bonusAdicional = premio.multiply(new BigDecimal("0.3")).setScale(scale, roundingMode);
 				seguradoAtual.creditarBonus(bonusAdicional);
 
 				if (isEhLocadoraDeVeiculos && seguradoAtual instanceof SeguradoEmpresa) {
-					daoSegEmp.alterar((SeguradoEmpresa) seguradoAtual); // Use a variável de instância
+					daoSegEmp.alterar((SeguradoEmpresa) seguradoAtual);
 				} else if (!isEhLocadoraDeVeiculos && seguradoAtual instanceof SeguradoPessoa) {
-					daoSegPes.alterar((SeguradoPessoa) seguradoAtual); // Use a variável de instância
+					daoSegPes.alterar((SeguradoPessoa) seguradoAtual);
 				}
 			}
 
@@ -140,11 +132,7 @@ public class ApoliceMediator {
 		return new RetornoInclusaoApolice(null, msg);
 	}
 
-	/*
-	 * Ver os testes test19 e test20
-	 */
 	public Apolice buscarApolice(String numero) {
-		// daoApo = new ApoliceDAO(); // Remova esta linha se inicializar no construtor
 		return daoApo.buscar(numero);
 	}
 	public String excluirApolice(String numero) {
@@ -156,39 +144,26 @@ public class ApoliceMediator {
 
 		Apolice apolice = buscarApolice(numero);
 
-		// SinistroDAO daoSin = new SinistroDAO(); // Remova esta linha
-
-		// CORREÇÃO AQUI: Converter Registro[] para Sinistro[]
 		Registro[] todosSinistrosRegistros = daoSin.buscarTodos();
 		List<Sinistro> listaSinistros = Arrays.stream(todosSinistrosRegistros)
 				.filter(s -> s instanceof Sinistro)
 				.map(s -> (Sinistro) s)
 				.collect(Collectors.toList());
-		// Não precisa converter para array de volta se for apenas para iterar.
-		// O loop for-each funciona com List<Sinistro>.
 
 		Veiculo veiApolice = apolice.getVeiculo();
 
-		for(Sinistro sinistro : listaSinistros){ // Use a lista de sinistros
+		for(Sinistro sinistro : listaSinistros){
 			if(sinistro.getDataHoraSinistro().getYear() == apolice.getDataInicioVigencia().getYear() && sinistro.getVeiculo().equals(veiApolice)){
 				return "Existe sinistro cadastrado para o veículo em questão e no mesmo ano da apólice";
 			}
 		}
 
-		// daoApo = new ApoliceDAO(); // Remova esta linha
 		daoApo.excluir(numero);
 
 		return null;
 	}
 
 	private String validarTodosDadosVeiculo(DadosVeiculo dados) {
-		// A inicialização dos DAOs deve ser no construtor. Remova as seguintes linhas
-		// SeguradoPessoaDAO seguradoPessoaDAO = new SeguradoPessoaDAO();
-		// SeguradoEmpresaDAO seguradoEmpresaDAO = new SeguradoEmpresaDAO();
-		// daoApo = new ApoliceDAO();
-		// daoVel = new VeiculoDAO();
-		// daoVel = new VeiculoDAO(); // Duplicado
-
 		String placa = dados.getPlaca();
 
 		if(dados.getPlaca() == null || dados.getPlaca().isBlank())
@@ -200,7 +175,6 @@ public class ApoliceMediator {
 		Veiculo veiculo = daoVel.buscar(dados.getPlaca());
 		String cpfOuCnpj = dados.getCpfOuCnpj();
 
-		//verificacao de cpf e cnpj
 		if (ehNuloOuBranco(cpfOuCnpj)) {
 			return "CPF ou CNPJ deve ser informado";
 		}
@@ -212,7 +186,7 @@ public class ApoliceMediator {
 		SeguradoEmpresa seguradoEmpresa = null;
 
 
-		if (veiculo == null){ // Se o veículo não existe no DAO, estamos criando um novo
+		if (veiculo == null){
 			if(ehNuloOuBranco(placa)){
 				return "Placa do veículo deve ser informada";
 			}
@@ -229,7 +203,6 @@ public class ApoliceMediator {
 			if(valorMaximoSegurado == null){
 				return "Valor máximo segurado deve ser informado";
 			}
-			//verificacao categoria e valor
 			CategoriaVeiculo categoria = obterCategoriaPorCodigo(dados.getCodigoCategoria());
 			if(categoria == null){
 				return "Categoria inválida";
@@ -244,18 +217,12 @@ public class ApoliceMediator {
 				return "Valor máximo segurado deve estar entre 75% e 100% do valor do carro encontrado na categoria";
 			}
 
-			// A validação de categoria inválida já é coberta pelo categoria == null
-			// if (dados.getCodigoCategoria() < 1 || dados.getCodigoCategoria() > 5) {
-			//    return "Categoria inválida";
-			// }
-
 			String numeroApolice = gerarNumero(dados.getCpfOuCnpj(), dados.getPlaca());
 			if (daoApo.buscar(numeroApolice) != null) {
 				return "Apólice já existente para ano atual e veículo";
 			}
 		}
 
-		// Lógica para buscar segurado (pessoa ou empresa)
 		if (cpfOuCnpj.length() == 11) {
 			String msgCpf = SeguradoPessoaMediator.getInstancia().validarCpf(cpfOuCnpj);
 			if (msgCpf != null) {
@@ -264,20 +231,20 @@ public class ApoliceMediator {
 				}
 				return msgCpf;
 			}
-			seguradoPessoa = daoSegPes.buscar(cpfOuCnpj); // Use a variável de instância
+			seguradoPessoa = daoSegPes.buscar(cpfOuCnpj);
 			if (seguradoPessoa == null) {
 				return "CPF inexistente no cadastro de pessoas";
 			}
 
 		} else if (cpfOuCnpj.length() == 14) {
-			String msgCnpj = SeguradoEmpresaMediator.getInstancia().validarCnpj(cpfOuCnpj); // Use instância Singleton
+			String msgCnpj = SeguradoEmpresaMediator.getInstancia().validarCnpj(cpfOuCnpj);
 			if (msgCnpj != null) {
 				if(msgCnpj.equals("CNPJ com dígito inválido")){
 					return "CNPJ inválido";
 				}
 				return msgCnpj;
 			}
-			seguradoEmpresa = daoSegEmp.buscar(cpfOuCnpj); // Use a variável de instância
+			seguradoEmpresa = daoSegEmp.buscar(cpfOuCnpj);
 			if (seguradoEmpresa == null) {
 				return "CNPJ inexistente no cadastro de empresas";
 			}
@@ -286,13 +253,9 @@ public class ApoliceMediator {
 			return "CPF ou CNPJ deve ser informado";
 		}
 
-		// Lógica para veículo existente
-		if (veiculo != null) { // Se o veículo já existe no DAO, estamos atualizando seu proprietário se necessário.
+		if (veiculo != null) {
 			Segurado proprietarioAtualDoVeiculo = null;
 
-			// Propriedade proprietarioPessoa e proprietarioEmpresa no Veiculo não são diretamente visíveis na classe Veiculo que você me enviou.
-			// Assumindo que você tem um método getProprietario() que retorna um Segurado, ou que existe uma lógica para determinar o tipo.
-			// Vou adaptar com base no que presumo que você tem.
 			if (veiculo.getProprietario() instanceof SeguradoPessoa) {
 				proprietarioAtualDoVeiculo = (SeguradoPessoa) veiculo.getProprietario();
 			} else if (veiculo.getProprietario() instanceof SeguradoEmpresa) {
@@ -306,12 +269,11 @@ public class ApoliceMediator {
 				cpfOuCnpjProprietarioAtual = ((SeguradoEmpresa) proprietarioAtualDoVeiculo).getCnpj();
 			}
 
-			// Se o proprietário do veículo existente é diferente do proprietário informado, atualiza.
 			if (proprietarioAtualDoVeiculo == null || !dados.getCpfOuCnpj().equals(cpfOuCnpjProprietarioAtual)) {
 				if (dados.getCpfOuCnpj().length() == 11) {
-					veiculo.setProprietario(seguradoPessoa); // Assumindo setProprietario(Segurado)
+					veiculo.setProprietario(seguradoPessoa);
 				} else {
-					veiculo.setProprietario(seguradoEmpresa); // Assumindo setProprietario(Segurado)
+					veiculo.setProprietario(seguradoEmpresa);
 				}
 				daoVel.alterar(veiculo);
 			}
@@ -326,37 +288,26 @@ public class ApoliceMediator {
 			}
 		} else {
 			if(pessoa){
-				vel = new Veiculo(dados.getPlaca(), dados.getAno(), seguradoPessoa, obterCategoriaPorCodigo(dados.getCodigoCategoria())); // Ajuste no construtor do Veiculo
+				vel = new Veiculo(dados.getPlaca(), dados.getAno(), seguradoPessoa, obterCategoriaPorCodigo(dados.getCodigoCategoria()));
 			} else{
-				vel = new Veiculo(dados.getPlaca(), dados.getAno(), seguradoEmpresa, obterCategoriaPorCodigo(dados.getCodigoCategoria())); // Ajuste no construtor do Veiculo
+				vel = new Veiculo(dados.getPlaca(), dados.getAno(), seguradoEmpresa, obterCategoriaPorCodigo(dados.getCodigoCategoria()));
 			}
-			daoVel.incluir(vel); // Inclui o novo veículo
+			daoVel.incluir(vel);
 		}
 
 		return null;
 	}
 
 	private String validarCpfCnpjValorMaximo(DadosVeiculo dados) {
-		// Esta função parece ter lógica redundante e não usada diretamente.
-		// O `validarTodosDadosVeiculo` já faz as validações de CPF/CNPJ e valor máximo.
-		// Recomendo revisar se esta função é realmente necessária e onde ela seria chamada.
-		// Por ora, vou corrigir apenas para compilar.
-
-		// SeguradoPessoaMediator seguradoPessoaMediator = SeguradoPessoaMediator.getInstancia(); // Use instancia
-		// SeguradoEmpresaMediator empresaMediator = SeguradoEmpresaMediator.getInstancia(); // Use instancia
-
 		if(dados.getCpfOuCnpj().length() == 11){
-			SeguradoPessoa seg = daoSegPes.buscar(dados.getCpfOuCnpj()); // Use a variável de instância
+			SeguradoPessoa seg = daoSegPes.buscar(dados.getCpfOuCnpj());
 			if (seg != null){
 				SeguradoPessoaMediator.getInstancia().validarCpf(dados.getCpfOuCnpj());
 				BigDecimal valorMax = obterValorMaximoPermitido(dados.getAno(), dados.getCodigoCategoria());
-				// Faltaria uma comparação ou uso do valorMax aqui
 			}
 		} else if (dados.getCpfOuCnpj().length() == 14){
-			String cnpjValidado = SeguradoEmpresaMediator.getInstancia().validarCnpj(dados.getCpfOuCnpj()); // Correção: validarCnpj retorna String, não String
-			// if (cnpjValidado != null) { return cnpjValidado; } // Adicione validação aqui
+			String cnpjValidado = SeguradoEmpresaMediator.getInstancia().validarCnpj(dados.getCpfOuCnpj());
 			BigDecimal valorMax = obterValorMaximoPermitido(dados.getAno(), dados.getCodigoCategoria());
-			// Faltaria uma comparação ou uso do valorMax aqui
 		}
 
 		return null;
@@ -386,7 +337,10 @@ public class ApoliceMediator {
 	}
 
 	private BigDecimal calcularPremio(Segurado segurado, boolean isEhLocadoraDeVeiculos, DadosVeiculo dados){
-		BigDecimal percentual = new BigDecimal("0.03"); // 3%
+		int scale = 2;
+		RoundingMode roundingMode = RoundingMode.HALF_UP;
+
+		BigDecimal percentual = new BigDecimal("0.03");
 
 		BigDecimal vpa = percentual.multiply(dados.getValorMaximoSegurado());
 		BigDecimal vpb;
@@ -398,17 +352,13 @@ public class ApoliceMediator {
 			vpb = vpa;
 		}
 
-		// A linha abaixo usa segurado.getBonus().divide(BigDecimal.TEN), mas BigDecimal.TEN não existe.
-		// Suponho que seja para dividir por 10.
-		// Além disso, o bônus deve ser subtraído, não dividido por 10 para então subtrair.
-		// Se o bônus for um valor monetário, subtraia-o diretamente.
-		// Se for um percentual do bônus, use o percentual.
-		// Vou assumir que é para subtrair o bônus dividido por 10.
-		BigDecimal vpc = vpb.subtract(segurado.getBonus().divide(BigDecimal.valueOf(10))); // Use BigDecimal.valueOf(10)
+		BigDecimal bonusDivididoPorDez = segurado.getBonus().divide(BigDecimal.TEN, scale, roundingMode);
+
+		BigDecimal vpc = vpb.subtract(bonusDivididoPorDez);
 
 		if(vpc.compareTo(BigDecimal.ZERO) > 0)
-			return vpc;
+			return vpc.setScale(scale, roundingMode);
 		else
-			return BigDecimal.ZERO;
+			return BigDecimal.ZERO.setScale(scale, roundingMode);
 	}
 }
