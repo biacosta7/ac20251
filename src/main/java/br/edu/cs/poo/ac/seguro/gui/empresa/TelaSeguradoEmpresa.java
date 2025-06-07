@@ -4,27 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException; // Import for specific date parsing exception
-
-// Assuming these classes exist in your project structure
+import java.time.format.DateTimeParseException;
 import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
 import br.edu.cs.poo.ac.seguro.mediators.SeguradoEmpresaMediator;
 
 public class TelaSeguradoEmpresa extends JFrame {
 
-    private JTextField tfCnpj; // CNPJ field
+    private JTextField tfCnpj;
     private JTextField tfLogradouro, tfCep, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade, tfNome, tfData, tfBonus, tfFaturamento;
     private JCheckBox cbLocadora;
 
     private JButton btnNovo;
     private JButton btnBuscar;
-    private JButton btnIncluir; // Renamed from btnSalvar
+    private JButton btnIncluir;
+    private JButton btnExcluir;
     private JButton btnLimpar;
-    private JButton btnCancelar; // Added Cancelar button
-    // private JButton btnExcluir; // You can add this back if needed
+    private JButton btnCancelar;
 
-    // List of all editable fields (excluding CNPJ for state management)
     private JTextField[] dataFields;
 
     public TelaSeguradoEmpresa() {
@@ -34,7 +31,7 @@ public class TelaSeguradoEmpresa extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        // --- CNPJ and Top Buttons ---
+        // --- CNPJ e Top Buttons ---
         JLabel lblCnpj = new JLabel("CNPJ:");
         lblCnpj.setBounds(50, 20, 80, 25);
         add(lblCnpj);
@@ -51,7 +48,6 @@ public class TelaSeguradoEmpresa extends JFrame {
         btnBuscar.setBounds(390, 20, 80, 25);
         add(btnBuscar);
 
-        // --- Fields for SeguradoEmpresa details ---
         tfNome = new JTextField();
         tfLogradouro = new JTextField();
         tfNumero = new JTextField();
@@ -72,12 +68,11 @@ public class TelaSeguradoEmpresa extends JFrame {
                 new JLabel("Data Abertura (YYYY-MM-DD):"), new JLabel("Bônus:"), new JLabel("Faturamento:")
         };
 
-        dataFields = new JTextField[]{ // Array of fields to enable/disable
+        dataFields = new JTextField[]{ 
                 tfNome, tfLogradouro, tfNumero, tfComplemento, tfCep, tfPais, tfEstado, tfCidade,
                 tfData, tfBonus, tfFaturamento
         };
 
-        // Layout for data fields
         int y = 60;
         int labelX = 50;
         int fieldX = 200;
@@ -99,36 +94,35 @@ public class TelaSeguradoEmpresa extends JFrame {
         y += rowHeight + spacing;
 
         // --- Bottom Action Buttons ---
-        btnIncluir = new JButton("Incluir"); // Renamed from Salvar
-        btnIncluir.setBounds(70, y + 20, 90, 30);
+        btnIncluir = new JButton("Incluir");
+        btnIncluir.setBounds(40, y + 20, 90, 30);
         add(btnIncluir);
 
-        // Add Excluir if needed:
-        // btnExcluir = new JButton("Excluir");
-        // btnExcluir.setBounds(170, y + 20, 90, 30);
-        // add(btnExcluir);
+        btnExcluir = new JButton("Excluir");
+        btnExcluir.setBounds(140, y + 20, 90, 30);
+        add(btnExcluir);
 
         btnLimpar = new JButton("Limpar");
-        btnLimpar.setBounds(270, y + 20, 90, 30); // Adjusted position
+        btnLimpar.setBounds(240, y + 20, 90, 30);
         add(btnLimpar);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(370, y + 20, 90, 30); // Adjusted position
+        btnCancelar.setBounds(340, y + 20, 90, 30);
         add(btnCancelar);
 
         // --- Initial State Setup ---
-        setFieldsEditable(false); // All data fields start as disabled
-        cbLocadora.setEnabled(false); // Checkbox also disabled
+        setFieldsEditable(false);
+        cbLocadora.setEnabled(false);
         btnIncluir.setEnabled(false);
-        // if (btnExcluir != null) btnExcluir.setEnabled(false); // Disable if present
+        btnExcluir.setEnabled(false); // Excluir is disabled inicialmente
         btnLimpar.setEnabled(false);
         btnCancelar.setEnabled(false);
 
         // --- Action Listeners ---
         btnNovo.addActionListener(e -> handleNovoAction());
         btnBuscar.addActionListener(e -> handleBuscarAction());
-        btnIncluir.addActionListener(e -> incluirEmpresa()); // Calls the include logic
-        // if (btnExcluir != null) btnExcluir.addActionListener(e -> excluirEmpresa());
+        btnIncluir.addActionListener(e -> incluirEmpresa());
+        btnExcluir.addActionListener(e -> excluirEmpresa());
         btnLimpar.addActionListener(e -> clearAllFieldsAndResetState());
         btnCancelar.addActionListener(e -> handleCancelarAction());
     }
@@ -151,13 +145,16 @@ public class TelaSeguradoEmpresa extends JFrame {
     private void clearAllFieldsAndResetState() {
         clearAllFields();
         tfCnpj.setEnabled(true);
+        tfCnpj.setText(""); // Ensure CNPJ is also cleared if user clicks "Limpar" from any state
         btnNovo.setEnabled(true);
         btnBuscar.setEnabled(true);
         setFieldsEditable(false);
+        btnIncluir.setText("Incluir"); // Reset button text
         btnIncluir.setEnabled(false);
-        // if (btnExcluir != null) btnExcluir.setEnabled(false);
+        btnExcluir.setEnabled(false); // Disable excluir
         btnLimpar.setEnabled(false);
         btnCancelar.setEnabled(false);
+        tfCnpj.requestFocusInWindow(); // Focus on CNPJ for new operation
     }
 
     private void handleNovoAction() {
@@ -166,28 +163,28 @@ public class TelaSeguradoEmpresa extends JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, digite o CNPJ para um novo cadastro.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // Basic CNPJ validation (you might want a more robust one)
-        if (!cnpj.matches("\\d{14}")) { // Assuming 14 digits for CNPJ
+        if (!cnpj.matches("\\d{14}")) {
             JOptionPane.showMessageDialog(this, "CNPJ inválido. Digite 14 dígitos.", "Erro de CNPJ", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Check if CNPJ already exists (assuming a mediator method for this)
+        // Check if CNPJ already exists (using mediator for consistency)
         if (SeguradoEmpresaMediator.getInstancia().buscarSeguradoEmpresa(cnpj) != null) {
-            JOptionPane.showMessageDialog(this, "CNPJ já cadastrado. Use 'Buscar' para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "CNPJ já cadastrado. Use 'Buscar' para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        clearAllFieldsExceptCnpj(); // Clear other fields, keep CNPJ
-        tfCnpj.setEnabled(false); // Lock CNPJ for new entry
+        clearAllFieldsExceptCnpj();
+        tfCnpj.setEnabled(false);
         setFieldsEditable(true); // Enable other fields for input
         btnNovo.setEnabled(false);
         btnBuscar.setEnabled(false);
-        btnIncluir.setEnabled(true); // Enable Incluir for new record
-        // if (btnExcluir != null) btnExcluir.setEnabled(false); // Excluir not for new
+        btnIncluir.setText("Incluir");
+        btnIncluir.setEnabled(true);
+        btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(true);
         btnCancelar.setEnabled(true);
-        tfNome.requestFocusInWindow(); // Set focus to the first data field
+        tfNome.requestFocusInWindow();
     }
 
     private void handleBuscarAction() {
@@ -196,7 +193,6 @@ public class TelaSeguradoEmpresa extends JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, digite o CNPJ para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // Basic CNPJ validation
         if (!cnpj.matches("\\d{14}")) {
             JOptionPane.showMessageDialog(this, "CNPJ inválido. Digite 14 dígitos.", "Erro de CNPJ", JOptionPane.ERROR_MESSAGE);
             return;
@@ -206,28 +202,28 @@ public class TelaSeguradoEmpresa extends JFrame {
 
         if (segurado != null) {
             populateFields(segurado);
-            tfCnpj.setEnabled(false); // Lock CNPJ
-            setFieldsEditable(true); // Enable other fields for editing
+            tfCnpj.setEnabled(false);
+            setFieldsEditable(true);
             btnNovo.setEnabled(false);
             btnBuscar.setEnabled(false);
-            btnIncluir.setText("Alterar"); // Change "Incluir" to "Alterar"
+            btnIncluir.setText("Alterar");
             btnIncluir.setEnabled(true);
-            // if (btnExcluir != null) btnExcluir.setEnabled(true);
+            btnExcluir.setEnabled(true);
             btnLimpar.setEnabled(true);
             btnCancelar.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Empresa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
             clearAllFieldsExceptCnpj();
-            tfCnpj.setText(cnpj); // Keep the entered CNPJ
-            setFieldsEditable(false); // Keep other fields disabled
+            tfCnpj.setText(cnpj);
+            setFieldsEditable(false);
             btnIncluir.setEnabled(false);
-            // if (btnExcluir != null) btnExcluir.setEnabled(false);
+            btnExcluir.setEnabled(false);
             btnLimpar.setEnabled(false);
             btnCancelar.setEnabled(false);
             JOptionPane.showMessageDialog(this, "Nenhuma empresa encontrada com o CNPJ: " + cnpj + "\nUse 'Novo' para cadastrar.", "Não Encontrado", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
+    
     private void populateFields(SeguradoEmpresa segurado) {
         tfNome.setText(segurado.getNome());
         Endereco endereco = segurado.getEndereco();
@@ -239,7 +235,16 @@ public class TelaSeguradoEmpresa extends JFrame {
             tfPais.setText(endereco.getPais());
             tfEstado.setText(endereco.getEstado());
             tfCidade.setText(endereco.getCidade());
+        } else {
+            tfLogradouro.setText("");
+            tfCep.setText("");
+            tfNumero.setText("");
+            tfComplemento.setText("");
+            tfPais.setText("");
+            tfEstado.setText("");
+            tfCidade.setText("");
         }
+
         tfData.setText(segurado.getDataAbertura() != null ? segurado.getDataAbertura().toString() : "");
         tfBonus.setText(segurado.getBonus() != null ? segurado.getBonus().toPlainString() : "");
         tfFaturamento.setText(String.valueOf(segurado.getFaturamento()));
@@ -254,7 +259,7 @@ public class TelaSeguradoEmpresa extends JFrame {
     }
 
     private void handleCancelarAction() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar?", "Cancelar", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar ao estado inicial?", "Cancelar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             clearAllFieldsAndResetState(); // Go back to initial state
         }
@@ -288,14 +293,13 @@ public class TelaSeguradoEmpresa extends JFrame {
             String erro;
             if (btnIncluir.getText().equals("Incluir")) { // Check button text to determine action
                 erro = SeguradoEmpresaMediator.getInstancia().incluirSeguradoEmpresa(seg);
-            } else { // It's "Alterar"
-                erro = SeguradoEmpresaMediator.getInstancia().alterarSeguradoEmpresa(seg); // Assuming this method exists
+            } else { // "Alterar"
+                erro = SeguradoEmpresaMediator.getInstancia().alterarSeguradoEmpresa(seg); // Assuming this method exists in Mediator
             }
-
 
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Operação realizada com sucesso!");
-                clearAllFieldsAndResetState(); // Reset UI after successful operation
+                clearAllFieldsAndResetState();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -308,8 +312,6 @@ public class TelaSeguradoEmpresa extends JFrame {
         }
     }
 
-    // You would implement excluirEmpresa if you add an Excluir button
-    /*
     private void excluirEmpresa() {
         String cnpj = tfCnpj.getText().trim();
         if (cnpj.isEmpty()) {
@@ -319,16 +321,15 @@ public class TelaSeguradoEmpresa extends JFrame {
 
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir a empresa com CNPJ: " + cnpj + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            String erro = SeguradoEmpresaMediator.getInstancia().excluirSeguradoEmpresa(cnpj); // Assuming this method exists
+            String erro = SeguradoEmpresaMediator.getInstancia().excluirSeguradoEmpresa(cnpj);
             if (erro == null) {
-                JOptionPane.showMessageDialog(this, "Empresa excluída com sucesso!");
+                JOptionPane.showMessageDialog(this, "Empresa excluída com sucesso.");
                 clearAllFieldsAndResetState();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-    */
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TelaSeguradoEmpresa().setVisible(true));
