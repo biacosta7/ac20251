@@ -65,7 +65,7 @@ public class TelaSinistro extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Placa
+        // placa
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel lblPlaca = new JLabel("Placa:");
         lblPlaca.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -76,7 +76,7 @@ public class TelaSinistro extends JFrame {
         gbc.weightx = 1.0;
         mainPanel.add(tfPlaca, gbc);
 
-        // Data/Hora do Sinistro
+        // data/hora do sinistro
         gbc.gridx = 0; gbc.gridy = 1;
         gbc.weightx = 0.0;
         JLabel lblDataHora = new JLabel("Data/Hora (dd-MM-yyyy HH:mm):");

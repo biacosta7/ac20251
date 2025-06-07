@@ -32,7 +32,7 @@ public class TelaSeguradoEmpresa extends JFrame {
 
     public TelaSeguradoEmpresa() {
         setTitle("Cadastro de Segurado Empresa");
-        setSize(600, 750); // Aumentei a largura e a altura
+        setSize(600, 750);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -57,7 +57,6 @@ public class TelaSeguradoEmpresa extends JFrame {
         tfBonus = new JTextField();
         cbLocadora = new JCheckBox("É locadora");
 
-        // Formatador para data
         try {
             MaskFormatter dateMask = new MaskFormatter("##/##/####");
             tfData = new JFormattedTextField(dateMask);
@@ -66,7 +65,6 @@ public class TelaSeguradoEmpresa extends JFrame {
             e.printStackTrace();
         }
 
-        // Formatador para faturamento
         NumberFormat faturamentoFormat = DecimalFormat.getNumberInstance();
         faturamentoFormat.setMinimumFractionDigits(2);
         faturamentoFormat.setMaximumFractionDigits(2);
@@ -77,12 +75,12 @@ public class TelaSeguradoEmpresa extends JFrame {
         tfFaturamento = new JFormattedTextField(faturamentoFormatter);
         tfFaturamento.setValue(0.00);
 
-        // Campos de Endereço
+        // endereco
         tfPais = new JTextField();
         tfEstado = new JTextField();
         tfCidade = new JTextField();
         try {
-            MaskFormatter cepMask = new MaskFormatter("########"); // Apenas números, 8 dígitos
+            MaskFormatter cepMask = new MaskFormatter("########");
             tfCep = new JFormattedTextField(cepMask);
         } catch (ParseException e) {
             tfCep = new JFormattedTextField();
@@ -331,7 +329,7 @@ public class TelaSeguradoEmpresa extends JFrame {
             String nome = tfNome.getText();
             Endereco endereco = new Endereco(
                     tfLogradouro.getText(),
-                    tfCep.getText().replaceAll("[^0-9]", ""), // Remove caracteres não numéricos do CEP
+                    tfCep.getText().replaceAll("[^0-9]", ""),
                     tfNumero.getText(),
                     tfComplemento.getText(),
                     tfPais.getText(),
