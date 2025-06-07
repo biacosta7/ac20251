@@ -1,9 +1,8 @@
-package br.edu.cs.poo.ac.seguro.gui.pessoa;
+package br.edu.cs.poo.ac.seguro.gui;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
-import java.awt.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -15,7 +14,6 @@ import java.time.format.DateTimeParseException;
 import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoPessoa;
 import br.edu.cs.poo.ac.seguro.mediators.SeguradoPessoaMediator;
-import br.edu.cs.poo.ac.seguro.mediators.SeguradoMediator;
 
 public class TelaSeguradoPessoa extends JFrame {
 
@@ -122,7 +120,7 @@ public class TelaSeguradoPessoa extends JFrame {
             y += rowHeight + spacing;
         }
 
-        JLabel lblEnderecoTitle = new JLabel("--- Endereço ---");
+        JLabel lblEnderecoTitle = new JLabel("Endereço");
         lblEnderecoTitle.setBounds(labelX, y + 10, labelWidth + fieldWidth, 25);
         lblEnderecoTitle.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblEnderecoTitle);

@@ -1,9 +1,8 @@
-package br.edu.cs.poo.ac.seguro.gui.empresa;
+package br.edu.cs.poo.ac.seguro.gui;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
-import java.awt.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -14,7 +13,6 @@ import java.time.format.DateTimeParseException;
 import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
 import br.edu.cs.poo.ac.seguro.mediators.SeguradoEmpresaMediator;
-import br.edu.cs.poo.ac.seguro.mediators.SeguradoMediator;
 
 public class TelaSeguradoEmpresa extends JFrame {
 
