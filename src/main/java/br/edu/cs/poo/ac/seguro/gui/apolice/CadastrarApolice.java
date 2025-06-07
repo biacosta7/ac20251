@@ -6,6 +6,7 @@ import br.edu.cs.poo.ac.seguro.mediators.DadosVeiculo;
 import br.edu.cs.poo.ac.seguro.mediators.RetornoInclusaoApolice;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.math.BigDecimal;
@@ -34,39 +35,61 @@ public class CadastrarApolice extends JFrame {
     private JButton btnLimpar;
 
     public CadastrarApolice() {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
         apoliceMediator = ApoliceMediator.getInstancia();
 
-        setTitle("Inclusão de Apólice");
-        setSize(500, 400); // Adjusted size back
+        setTitle("Inclusão de Apólice de Veículo");
+        setSize(550, 420);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(new Color(240, 248, 255));
 
-        setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // --- CPF ou CNPJ ---
+        JLabel lblCpfCnpj = new JLabel("CPF/CNPJ:");
+        lblCpfCnpj.setFont(new Font("Segoe UI", Font.BOLD, 12));
         gbc.gridx = 0; gbc.gridy = 0;
-        add(new JLabel("CPF/CNPJ:"), gbc);
-        txtCpfOuCnpj = new JTextField(15);
+        mainPanel.add(lblCpfCnpj, gbc);
+        txtCpfOuCnpj = new JTextField(20);
+        txtCpfOuCnpj.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        add(txtCpfOuCnpj, gbc);
+        mainPanel.add(txtCpfOuCnpj, gbc);
 
-        // --- Placa ---
+        JLabel lblPlaca = new JLabel("Placa:");
+        lblPlaca.setFont(new Font("Segoe UI", Font.BOLD, 12));
         gbc.gridx = 0; gbc.gridy = 1;
         gbc.weightx = 0.0;
-        add(new JLabel("Placa:"), gbc);
-        txtPlaca = new JTextField(10);
+        mainPanel.add(lblPlaca, gbc);
+        txtPlaca = new JTextField(15);
+        txtPlaca.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        add(txtPlaca, gbc);
+        mainPanel.add(txtPlaca, gbc);
 
-        // --- Ano do Veículo ---
+        JLabel lblAno = new JLabel("Ano do Veículo:");
+        lblAno.setFont(new Font("Segoe UI", Font.BOLD, 12));
         gbc.gridx = 0; gbc.gridy = 2;
         gbc.weightx = 0.0;
-        add(new JLabel("Ano do Veículo:"), gbc);
+        mainPanel.add(lblAno, gbc);
 
         DecimalFormat anoDecimalFormat = new DecimalFormat("####");
         anoDecimalFormat.setGroupingUsed(false);
@@ -78,58 +101,75 @@ public class CadastrarApolice extends JFrame {
         anoFormatter.setMinimum(1900);
         anoFormatter.setMaximum(LocalDate.now().getYear() + 1);
         txtAno = new JFormattedTextField(anoFormatter);
-        txtAno.setColumns(4);
+        txtAno.setColumns(6);
+        txtAno.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         txtAno.setValue(null);
         txtAno.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        add(txtAno, gbc);
+        mainPanel.add(txtAno, gbc);
 
-        // --- Valor Máximo Segurado ---
+        JLabel lblValorMaximo = new JLabel("Valor Máximo Segurado:");
+        lblValorMaximo.setFont(new Font("Segoe UI", Font.BOLD, 12));
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.weightx = 0.0;
-        add(new JLabel("Valor Máximo Segurado:"), gbc);
+        mainPanel.add(lblValorMaximo, gbc);
         DecimalFormat valorDecimalFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         valorDecimalFormat.setParseBigDecimal(true);
         valorDecimalFormat.setMinimumFractionDigits(2);
         valorDecimalFormat.setMaximumFractionDigits(2);
-        valorDecimalFormat.applyPattern("#,##0.00"); // Standard number pattern for pt-BR
+        valorDecimalFormat.applyPattern("#,##0.00");
 
         NumberFormatter valorFormatter = new NumberFormatter(valorDecimalFormat);
         valorFormatter.setValueClass(BigDecimal.class);
         valorFormatter.setAllowsInvalid(true);
         valorFormatter.setOverwriteMode(false);
         txtValorMaximoSegurado = new JFormattedTextField(valorFormatter);
-        txtValorMaximoSegurado.setColumns(10);
+        txtValorMaximoSegurado.setColumns(12);
+        txtValorMaximoSegurado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         txtValorMaximoSegurado.setValue(null);
         txtValorMaximoSegurado.setFocusLostBehavior(JFormattedTextField.COMMIT);
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        add(txtValorMaximoSegurado, gbc);
+        mainPanel.add(txtValorMaximoSegurado, gbc);
 
-        // --- Categoria do Veículo ---
-        gbc.gridx = 0; gbc.gridy = 4; // Adjusted row index
+        JLabel lblCategoria = new JLabel("Categoria do Veículo:");
+        lblCategoria.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        gbc.gridx = 0; gbc.gridy = 4;
         gbc.weightx = 0.0;
-        add(new JLabel("Categoria do Veículo:"), gbc);
+        mainPanel.add(lblCategoria, gbc);
         cmbCategoriaVeiculo = new JComboBox<>();
+        cmbCategoriaVeiculo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         popularCategorias();
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        add(cmbCategoriaVeiculo, gbc);
+        mainPanel.add(cmbCategoriaVeiculo, gbc);
 
-        // --- Buttons Panel ---
-        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        btnIncluir = new JButton("Incluir");
+        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 15));
+        panelBotoes.setBackground(new Color(240, 248, 255));
+
+        btnIncluir = new JButton("Incluir Apólice");
+        btnIncluir.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnIncluir.setBackground(new Color(60, 179, 113));
+        btnIncluir.setForeground(Color.WHITE);
+        btnIncluir.setFocusPainted(false);
         panelBotoes.add(btnIncluir);
-        btnLimpar = new JButton("Limpar");
+
+        btnLimpar = new JButton("Limpar Campos");
+        btnLimpar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnLimpar.setBackground(new Color(100, 149, 237));
+        btnLimpar.setForeground(Color.WHITE);
+        btnLimpar.setFocusPainted(false);
         panelBotoes.add(btnLimpar);
 
-        gbc.gridx = 0; gbc.gridy = 5; // Adjusted row index
+        gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(panelBotoes, gbc);
+        mainPanel.add(panelBotoes, gbc);
+
+        add(mainPanel);
 
         addListeners();
     }
@@ -179,7 +219,6 @@ public class CadastrarApolice extends JFrame {
         }
 
         try {
-            // --- Ano ---
             if (txtAno.getText().trim().isEmpty() || txtAno.getText().contains("_")) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o campo Ano do Veículo.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
                 txtAno.requestFocusInWindow();
@@ -188,12 +227,11 @@ public class CadastrarApolice extends JFrame {
             txtAno.commitEdit();
             Integer ano = (Integer) txtAno.getValue();
             if (ano == null) {
-                JOptionPane.showMessageDialog(this, "Valor inválido para o Ano do Veículo. Por favor, insira um número inteiro válido (e.g., 2024).", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Valor inválido para o Ano do Veículo. Por favor, insira um número inteiro válido (e.g., " + LocalDate.now().getYear() + ").", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
                 txtAno.requestFocusInWindow();
                 return;
             }
 
-            // --- Valor Máximo Segurado ---
             if (txtValorMaximoSegurado.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o campo Valor Máximo Segurado.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
                 txtValorMaximoSegurado.requestFocusInWindow();
@@ -207,7 +245,6 @@ public class CadastrarApolice extends JFrame {
                 return;
             }
 
-            // --- Categoria Veículo ---
             int selectedIndex = cmbCategoriaVeiculo.getSelectedIndex();
             CategoriaVeiculo categoriaSelecionada = null;
             if (selectedIndex >= 0 && selectedIndex < categoriasOrdenadas.size()) {
@@ -220,7 +257,6 @@ public class CadastrarApolice extends JFrame {
             }
             int codigoCategoria = categoriaSelecionada.getCodigo();
 
-            // --- Create DadosVeiculo and call mediator ---
             DadosVeiculo dadosVeiculo = new DadosVeiculo(
                     cpfOuCnpj,
                     placa,
