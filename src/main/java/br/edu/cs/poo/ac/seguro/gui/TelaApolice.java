@@ -1,4 +1,4 @@
-package br.edu.cs.poo.ac.seguro.gui.apolice;
+package br.edu.cs.poo.ac.seguro.gui;
 
 import br.edu.cs.poo.ac.seguro.entidades.CategoriaVeiculo;
 import br.edu.cs.poo.ac.seguro.mediators.ApoliceMediator;
@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class CadastrarApolice extends JFrame {
+public class TelaApolice extends JFrame {
 
     private ApoliceMediator apoliceMediator;
     private JTextField txtCpfOuCnpj;
@@ -34,7 +34,7 @@ public class CadastrarApolice extends JFrame {
     private JButton btnIncluir;
     private JButton btnLimpar;
 
-    public CadastrarApolice() {
+    public TelaApolice() {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -290,7 +290,7 @@ public class CadastrarApolice extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                CadastrarApolice window = new CadastrarApolice();
+                TelaApolice window = new TelaApolice();
                 window.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();

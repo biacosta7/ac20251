@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class CadastrarSinistro extends JFrame {
+public class TelaSinistro extends JFrame {
 
     private SinistroMediator sinistroMediator;
     private JTextField tfPlaca;
@@ -29,7 +29,7 @@ public class CadastrarSinistro extends JFrame {
     private JButton btnIncluir;
     private JButton btnLimpar;
 
-    public CadastrarSinistro() {
+    public TelaSinistro() {
         sinistroMediator = SinistroMediator.getInstancia();
 
         setTitle("Inclusão de Sinistro");
@@ -232,7 +232,7 @@ public class CadastrarSinistro extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                CadastrarSinistro window = new CadastrarSinistro();
+                TelaSinistro window = new TelaSinistro();
                 window.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
