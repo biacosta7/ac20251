@@ -1,18 +1,26 @@
 package br.edu.cs.poo.ac.seguro.gui.empresa;
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoEmpresa;
 import br.edu.cs.poo.ac.seguro.mediators.SeguradoEmpresaMediator;
+import br.edu.cs.poo.ac.seguro.mediators.SeguradoMediator;
 
 public class TelaSeguradoEmpresa extends JFrame {
 
     private JTextField tfCnpj;
-    private JTextField tfLogradouro, tfCep, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade, tfNome, tfData, tfBonus, tfFaturamento;
+    private JTextField tfNome, tfBonus, tfLogradouro, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade;
+    private JFormattedTextField tfData, tfFaturamento, tfCep;
     private JCheckBox cbLocadora;
 
     private JButton btnNovo;
@@ -22,11 +30,11 @@ public class TelaSeguradoEmpresa extends JFrame {
     private JButton btnLimpar;
     private JButton btnCancelar;
 
-    private JTextField[] dataFields;
+    private JTextField[] campos;
 
     public TelaSeguradoEmpresa() {
         setTitle("Cadastro de Segurado Empresa");
-        setSize(500, 650);
+        setSize(600, 750); // Aumentei a largura e a altura
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -48,49 +56,108 @@ public class TelaSeguradoEmpresa extends JFrame {
         add(btnBuscar);
 
         tfNome = new JTextField();
-        tfLogradouro = new JTextField();
-        tfNumero = new JTextField();
-        tfComplemento = new JTextField();
-        tfCep = new JTextField();
+        tfBonus = new JTextField();
+        cbLocadora = new JCheckBox("É locadora");
+
+        // Formatador para data
+        try {
+            MaskFormatter dateMask = new MaskFormatter("##/##/####");
+            tfData = new JFormattedTextField(dateMask);
+        } catch (ParseException e) {
+            tfData = new JFormattedTextField();
+            e.printStackTrace();
+        }
+
+        // Formatador para faturamento
+        NumberFormat faturamentoFormat = DecimalFormat.getNumberInstance();
+        faturamentoFormat.setMinimumFractionDigits(2);
+        faturamentoFormat.setMaximumFractionDigits(2);
+        NumberFormatter faturamentoFormatter = new NumberFormatter(faturamentoFormat);
+        faturamentoFormatter.setValueClass(Double.class);
+        faturamentoFormatter.setAllowsInvalid(false);
+        faturamentoFormatter.setCommitsOnValidEdit(true);
+        tfFaturamento = new JFormattedTextField(faturamentoFormatter);
+        tfFaturamento.setValue(0.00);
+
+        // Campos de Endereço
         tfPais = new JTextField();
         tfEstado = new JTextField();
         tfCidade = new JTextField();
-        tfData = new JTextField();
-        tfBonus = new JTextField();
-        tfFaturamento = new JTextField();
-        cbLocadora = new JCheckBox("É locadora");
+        try {
+            MaskFormatter cepMask = new MaskFormatter("########"); // Apenas números, 8 dígitos
+            tfCep = new JFormattedTextField(cepMask);
+        } catch (ParseException e) {
+            tfCep = new JFormattedTextField();
+            e.printStackTrace();
+        }
+        tfLogradouro = new JTextField();
+        tfNumero = new JTextField();
+        tfComplemento = new JTextField();
+
 
         JLabel[] labels = {
                 new JLabel("Nome:"),
-                new JLabel("Logradouro:"), new JLabel("Número:"), new JLabel("Complemento:"),
-                new JLabel("CEP:"), new JLabel("País:"), new JLabel("Estado:"), new JLabel("Cidade:"),
-                new JLabel("Data Abertura (YYYY-MM-DD):"), new JLabel("Bônus:"), new JLabel("Faturamento:")
+                new JLabel("Data Abertura (DD/MM/YYYY):"),
+                new JLabel("Faturamento:"),
+                new JLabel("Bônus:"),
         };
 
-        dataFields = new JTextField[]{
-                tfNome, tfLogradouro, tfNumero, tfComplemento, tfCep, tfPais, tfEstado, tfCidade,
-                tfData, tfBonus, tfFaturamento
+        JTextField[] fields = {
+                tfNome, tfData, tfFaturamento, tfBonus
         };
 
         int y = 60;
         int labelX = 50;
-        int fieldX = 200;
-        int labelWidth = 140;
+        int fieldX = 220;
+        int labelWidth = 160;
         int fieldWidth = 250;
         int rowHeight = 30;
         int spacing = 5;
 
         for (int i = 0; i < labels.length; i++) {
             labels[i].setBounds(labelX, y, labelWidth, 25);
-            dataFields[i].setBounds(fieldX, y, fieldWidth, 25);
+            fields[i].setBounds(fieldX, y, fieldWidth, 25);
             add(labels[i]);
-            add(dataFields[i]);
+            add(fields[i]);
             y += rowHeight + spacing;
         }
 
         cbLocadora.setBounds(fieldX, y, fieldWidth, 25);
         add(cbLocadora);
         y += rowHeight + spacing;
+
+        JLabel lblEnderecoTitle = new JLabel("Endereço");
+        lblEnderecoTitle.setBounds(labelX, y + 10, labelWidth + fieldWidth, 25);
+        lblEnderecoTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        add(lblEnderecoTitle);
+        y += rowHeight + 20;
+
+        JLabel[] enderecoLabels = {
+                new JLabel("País:"),
+                new JLabel("Estado:"),
+                new JLabel("Cidade:"),
+                new JLabel("CEP:"),
+                new JLabel("Logradouro:"),
+                new JLabel("Número:"),
+                new JLabel("Complemento:")
+        };
+
+        JTextField[] enderecoFields = {
+                tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
+
+        for (int i = 0; i < enderecoLabels.length; i++) {
+            enderecoLabels[i].setBounds(labelX, y, labelWidth, 25);
+            enderecoFields[i].setBounds(fieldX, y, fieldWidth, 25);
+            add(enderecoLabels[i]);
+            add(enderecoFields[i]);
+            y += rowHeight + spacing;
+        }
+
+        campos = new JTextField[]{
+                tfNome, tfData, tfFaturamento, tfBonus, tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
+
 
         btnIncluir = new JButton("Incluir");
         btnIncluir.setBounds(40, y + 20, 90, 30);
@@ -108,7 +175,7 @@ public class TelaSeguradoEmpresa extends JFrame {
         btnCancelar.setBounds(340, y + 20, 90, 30);
         add(btnCancelar);
 
-        setFieldsEditable(false);
+        setCamposEditavel(false);
         cbLocadora.setEnabled(false);
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
@@ -119,32 +186,33 @@ public class TelaSeguradoEmpresa extends JFrame {
         btnBuscar.addActionListener(e -> handleBuscarAction());
         btnIncluir.addActionListener(e -> incluirEmpresa());
         btnExcluir.addActionListener(e -> excluirEmpresa());
-        btnLimpar.addActionListener(e -> clearAllFieldsAndResetState());
+        btnLimpar.addActionListener(e -> limparCamposEResetarEstado());
         btnCancelar.addActionListener(e -> handleCancelarAction());
     }
 
-    private void setFieldsEditable(boolean editable) {
-        for (JTextField field : dataFields) {
-            field.setEnabled(editable);
+    private void setCamposEditavel(boolean editable) {
+        for (JTextField campo : campos) {
+            campo.setEnabled(editable);
         }
         cbLocadora.setEnabled(editable);
     }
 
-    private void clearAllFields() {
+    private void limparCampos() {
         tfCnpj.setText("");
-        for (JTextField field : dataFields) {
-            field.setText("");
+        for (JTextField campo : campos) {
+            campo.setText("");
         }
+        tfFaturamento.setValue(0.00);
         cbLocadora.setSelected(false);
     }
 
-    private void clearAllFieldsAndResetState() {
-        clearAllFields();
+    private void limparCamposEResetarEstado() {
+        limparCampos();
         tfCnpj.setEnabled(true);
         tfCnpj.setText("");
         btnNovo.setEnabled(true);
         btnBuscar.setEnabled(true);
-        setFieldsEditable(false);
+        setCamposEditavel(false);
         btnIncluir.setText("Incluir");
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
@@ -167,9 +235,9 @@ public class TelaSeguradoEmpresa extends JFrame {
             return;
         }
 
-        clearAllFieldsExceptCnpj();
+        limparCamposExceptCnpj();
         tfCnpj.setEnabled(false);
-        setFieldsEditable(true);
+        setCamposEditavel(true);
         btnNovo.setEnabled(false);
         btnBuscar.setEnabled(false);
         btnIncluir.setText("Incluir");
@@ -192,9 +260,9 @@ public class TelaSeguradoEmpresa extends JFrame {
         SeguradoEmpresa segurado = SeguradoEmpresaMediator.getInstancia().buscarSeguradoEmpresa(cnpj);
 
         if (segurado != null) {
-            populateFields(segurado);
+            popularCampos(segurado);
             tfCnpj.setEnabled(false);
-            setFieldsEditable(true);
+            setCamposEditavel(true);
             btnNovo.setEnabled(false);
             btnBuscar.setEnabled(false);
             btnIncluir.setText("Alterar");
@@ -204,9 +272,9 @@ public class TelaSeguradoEmpresa extends JFrame {
             btnCancelar.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Empresa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            clearAllFieldsExceptCnpj();
+            limparCamposExceptCnpj();
             tfCnpj.setText(cnpj);
-            setFieldsEditable(false);
+            setCamposEditavel(false);
             btnIncluir.setEnabled(false);
             btnExcluir.setEnabled(false);
             btnLimpar.setEnabled(false);
@@ -215,7 +283,7 @@ public class TelaSeguradoEmpresa extends JFrame {
         }
     }
 
-    private void populateFields(SeguradoEmpresa segurado) {
+    private void popularCampos(SeguradoEmpresa segurado) {
         tfNome.setText(segurado.getNome());
         Endereco endereco = segurado.getEndereco();
         if (endereco != null) {
@@ -236,23 +304,25 @@ public class TelaSeguradoEmpresa extends JFrame {
             tfCidade.setText("");
         }
 
-        tfData.setText(segurado.getDataAbertura() != null ? segurado.getDataAbertura().toString() : "");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        tfData.setText(segurado.getDataAbertura() != null ? segurado.getDataAbertura().format(formatter) : "");
         tfBonus.setText(segurado.getBonus() != null ? segurado.getBonus().toPlainString() : "");
-        tfFaturamento.setText(String.valueOf(segurado.getFaturamento()));
+        tfFaturamento.setValue(segurado.getFaturamento());
         cbLocadora.setSelected(segurado.isEhLocadoraDeVeiculos());
     }
 
-    private void clearAllFieldsExceptCnpj() {
-        for (JTextField field : dataFields) {
-            field.setText("");
+    private void limparCamposExceptCnpj() {
+        for (JTextField campo : campos) {
+            campo.setText("");
         }
+        tfFaturamento.setValue(0.00);
         cbLocadora.setSelected(false);
     }
 
     private void handleCancelarAction() {
         int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar ao estado inicial?", "Cancelar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            clearAllFieldsAndResetState();
+            limparCamposEResetarEstado();
         }
     }
 
@@ -263,16 +333,19 @@ public class TelaSeguradoEmpresa extends JFrame {
             String nome = tfNome.getText();
             Endereco endereco = new Endereco(
                     tfLogradouro.getText(),
-                    tfCep.getText(),
+                    tfCep.getText().replaceAll("[^0-9]", ""), // Remove caracteres não numéricos do CEP
                     tfNumero.getText(),
                     tfComplemento.getText(),
                     tfPais.getText(),
                     tfEstado.getText(),
                     tfCidade.getText()
             );
-            LocalDate data = LocalDate.parse(tfData.getText());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate data = LocalDate.parse(tfData.getText(), formatter);
+
             BigDecimal bonus = new BigDecimal(tfBonus.getText());
-            double faturamento = Double.parseDouble(tfFaturamento.getText());
+            double faturamento = ((Number)tfFaturamento.getValue()).doubleValue();
             boolean ehLocadora = cbLocadora.isSelected();
 
             SeguradoEmpresa seg = new SeguradoEmpresa(nome, endereco, data, bonus, cnpj, faturamento, ehLocadora);
@@ -286,14 +359,14 @@ public class TelaSeguradoEmpresa extends JFrame {
 
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Operação realizada com sucesso!");
-                clearAllFieldsAndResetState();
+                limparCamposEResetarEstado();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "Formato de data inválido. Use YYYY-MM-DD.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Formato de data inválido. Use DD/MM/YYYY.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Bônus ou Faturamento devem ser números válidos.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Bônus deve ser um número válido.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao processar dados: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -313,7 +386,7 @@ public class TelaSeguradoEmpresa extends JFrame {
             String erro = SeguradoEmpresaMediator.getInstancia().excluirSeguradoEmpresa(cnpj);
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Empresa excluída com sucesso.");
-                clearAllFieldsAndResetState();
+                limparCamposEResetarEstado();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
