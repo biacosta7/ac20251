@@ -168,7 +168,6 @@ public class TelaSeguradoEmpresa extends JFrame {
             return;
         }
 
-        // Check if CNPJ already exists (using mediator for consistency)
         if (SeguradoEmpresaMediator.getInstancia().buscarSeguradoEmpresa(cnpj) != null) {
             JOptionPane.showMessageDialog(this, "CNPJ já cadastrado. Use 'Buscar' para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
@@ -261,7 +260,7 @@ public class TelaSeguradoEmpresa extends JFrame {
     private void handleCancelarAction() {
         int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar ao estado inicial?", "Cancelar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            clearAllFieldsAndResetState(); // Go back to initial state
+            clearAllFieldsAndResetState();
         }
     }
 
@@ -294,7 +293,7 @@ public class TelaSeguradoEmpresa extends JFrame {
             if (btnIncluir.getText().equals("Incluir")) { // Check button text to determine action
                 erro = SeguradoEmpresaMediator.getInstancia().incluirSeguradoEmpresa(seg);
             } else { // "Alterar"
-                erro = SeguradoEmpresaMediator.getInstancia().alterarSeguradoEmpresa(seg); // Assuming this method exists in Mediator
+                erro = SeguradoEmpresaMediator.getInstancia().alterarSeguradoEmpresa(seg);
             }
 
             if (erro == null) {
