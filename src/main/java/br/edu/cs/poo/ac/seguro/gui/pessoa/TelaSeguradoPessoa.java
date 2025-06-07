@@ -1,18 +1,27 @@
 package br.edu.cs.poo.ac.seguro.gui.pessoa;
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
+import java.awt.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import br.edu.cs.poo.ac.seguro.entidades.Endereco;
 import br.edu.cs.poo.ac.seguro.entidades.SeguradoPessoa;
 import br.edu.cs.poo.ac.seguro.mediators.SeguradoPessoaMediator;
+import br.edu.cs.poo.ac.seguro.mediators.SeguradoMediator;
 
 public class TelaSeguradoPessoa extends JFrame {
 
     private JTextField tfCpf;
-    private JTextField tfLogradouro, tfCep, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade, tfNome, tfDataNascimento, tfBonus, tfRenda;
+    private JTextField tfNome, tfBonus, tfLogradouro, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade;
+    private JFormattedTextField tfDataNascimento, tfRenda, tfCep;
 
     private JButton btnNovo;
     private JButton btnBuscar;
@@ -21,11 +30,11 @@ public class TelaSeguradoPessoa extends JFrame {
     private JButton btnLimpar;
     private JButton btnCancelar;
 
-    private JTextField[] dataFields;
+    private JTextField[] campos; // Alterado para 'campos' para consistência
 
     public TelaSeguradoPessoa() {
         setTitle("Cadastro de Segurado Pessoa");
-        setSize(500, 650);
+        setSize(600, 750); // Aumentei a largura e a altura, similar à TelaSeguradoEmpresa
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -47,46 +56,105 @@ public class TelaSeguradoPessoa extends JFrame {
         add(btnBuscar);
 
         tfNome = new JTextField();
-        tfLogradouro = new JTextField();
-        tfNumero = new JTextField();
-        tfComplemento = new JTextField();
-        tfCep = new JTextField();
+        tfBonus = new JTextField();
+
+        // Configuração do JFormattedTextField para Data de Nascimento
+        try {
+            MaskFormatter dateMask = new MaskFormatter("##/##/####");
+            tfDataNascimento = new JFormattedTextField(dateMask);
+        } catch (ParseException e) {
+            tfDataNascimento = new JFormattedTextField();
+            e.printStackTrace();
+        }
+
+        // Configuração do JFormattedTextField para Renda
+        NumberFormat rendaFormat = DecimalFormat.getNumberInstance();
+        rendaFormat.setMinimumFractionDigits(2);
+        rendaFormat.setMaximumFractionDigits(2);
+        NumberFormatter rendaFormatter = new NumberFormatter(rendaFormat);
+        rendaFormatter.setValueClass(Double.class);
+        rendaFormatter.setAllowsInvalid(false);
+        rendaFormatter.setCommitsOnValidEdit(true);
+        tfRenda = new JFormattedTextField(rendaFormatter);
+        tfRenda.setValue(0.00);
+
+        // Campos de Endereço
         tfPais = new JTextField();
         tfEstado = new JTextField();
         tfCidade = new JTextField();
-        tfDataNascimento = new JTextField();
-        tfBonus = new JTextField();
-        tfRenda = new JTextField();
+        try {
+            MaskFormatter cepMask = new MaskFormatter("########"); // Apenas números, 8 dígitos
+            tfCep = new JFormattedTextField(cepMask);
+        } catch (ParseException e) {
+            tfCep = new JFormattedTextField();
+            e.printStackTrace();
+        }
+        tfLogradouro = new JTextField();
+        tfNumero = new JTextField();
+        tfComplemento = new JTextField();
 
+
+        // Ordem dos campos
         JLabel[] labels = {
                 new JLabel("Nome:"),
-                new JLabel("Logradouro:"), new JLabel("Número:"), new JLabel("Complemento:"),
-                new JLabel("CEP:"), new JLabel("País:"), new JLabel("Estado:"), new JLabel("Cidade:"),
-                new JLabel("Data Nascimento (YYYY-MM-DD):"),
-                new JLabel("Bônus:"),
-                new JLabel("Renda:")
+                new JLabel("Data Nascimento (DD/MM/YYYY):"),
+                new JLabel("Renda:"),
+                new JLabel("Bônus:")
         };
 
-        dataFields = new JTextField[]{
-                tfNome, tfLogradouro, tfNumero, tfComplemento, tfCep, tfPais, tfEstado, tfCidade,
-                tfDataNascimento, tfBonus, tfRenda
+        JTextField[] fields = {
+                tfNome, tfDataNascimento, tfRenda, tfBonus
         };
 
         int y = 60;
         int labelX = 50;
-        int fieldX = 200;
-        int labelWidth = 140;
+        int fieldX = 220;
+        int labelWidth = 160;
         int fieldWidth = 250;
         int rowHeight = 30;
         int spacing = 5;
 
         for (int i = 0; i < labels.length; i++) {
             labels[i].setBounds(labelX, y, labelWidth, 25);
-            dataFields[i].setBounds(fieldX, y, fieldWidth, 25);
+            fields[i].setBounds(fieldX, y, fieldWidth, 25);
             add(labels[i]);
-            add(dataFields[i]);
+            add(fields[i]);
             y += rowHeight + spacing;
         }
+
+        JLabel lblEnderecoTitle = new JLabel("--- Endereço ---");
+        lblEnderecoTitle.setBounds(labelX, y + 10, labelWidth + fieldWidth, 25);
+        lblEnderecoTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        add(lblEnderecoTitle);
+        y += rowHeight + 20;
+
+        JLabel[] enderecoLabels = {
+                new JLabel("País:"),
+                new JLabel("Estado:"),
+                new JLabel("Cidade:"),
+                new JLabel("CEP:"),
+                new JLabel("Logradouro:"),
+                new JLabel("Número:"),
+                new JLabel("Complemento:")
+        };
+
+        JTextField[] enderecoFields = {
+                tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
+
+        for (int i = 0; i < enderecoLabels.length; i++) {
+            enderecoLabels[i].setBounds(labelX, y, labelWidth, 25);
+            enderecoFields[i].setBounds(fieldX, y, fieldWidth, 25);
+            add(enderecoLabels[i]);
+            add(enderecoFields[i]);
+            y += rowHeight + spacing;
+        }
+
+        // Agrupando todos os campos editáveis para controle de estado
+        campos = new JTextField[]{
+                tfNome, tfDataNascimento, tfRenda, tfBonus,
+                tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
 
         btnIncluir = new JButton("Incluir");
         btnIncluir.setBounds(40, y + 20, 90, 30);
@@ -119,16 +187,17 @@ public class TelaSeguradoPessoa extends JFrame {
     }
 
     private void setFieldsEditable(boolean editable) {
-        for (JTextField field : dataFields) {
+        for (JTextField field : campos) { // Usar 'campos'
             field.setEnabled(editable);
         }
     }
 
     private void clearAllFields() {
         tfCpf.setText("");
-        for (JTextField field : dataFields) {
+        for (JTextField field : campos) { // Usar 'campos'
             field.setText("");
         }
+        tfRenda.setValue(0.00); // Limpa o campo de renda formatado
     }
 
     private void clearAllFieldsAndResetState() {
@@ -229,15 +298,17 @@ public class TelaSeguradoPessoa extends JFrame {
             tfCidade.setText("");
         }
 
-        tfDataNascimento.setText(segurado.getDataNascimento() != null ? segurado.getDataNascimento().toString() : "");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        tfDataNascimento.setText(segurado.getDataNascimento() != null ? segurado.getDataNascimento().format(formatter) : "");
         tfBonus.setText(segurado.getBonus() != null ? segurado.getBonus().toPlainString() : "");
-        tfRenda.setText(String.valueOf(segurado.getRenda()));
+        tfRenda.setValue(segurado.getRenda());
     }
 
     private void clearAllFieldsExceptCpf() {
-        for (JTextField field : dataFields) {
+        for (JTextField field : campos) { // Usar 'campos'
             field.setText("");
         }
+        tfRenda.setValue(0.00); // Limpa o campo de renda formatado
     }
 
     private void handleCancelarAction() {
@@ -254,16 +325,17 @@ public class TelaSeguradoPessoa extends JFrame {
             String nome = tfNome.getText();
             Endereco endereco = new Endereco(
                     tfLogradouro.getText(),
-                    tfCep.getText(),
+                    tfCep.getText().replaceAll("[^0-9]", ""), // Remove caracteres não numéricos do CEP
                     tfNumero.getText(),
                     tfComplemento.getText(),
                     tfPais.getText(),
                     tfEstado.getText(),
                     tfCidade.getText()
             );
-            LocalDate dataNascimento = LocalDate.parse(tfDataNascimento.getText());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataNascimento = LocalDate.parse(tfDataNascimento.getText(), formatter);
             BigDecimal bonus = new BigDecimal(tfBonus.getText());
-            double renda = Double.parseDouble(tfRenda.getText());
+            double renda = ((Number)tfRenda.getValue()).doubleValue(); // Obtém o valor formatado
 
             SeguradoPessoa seg = new SeguradoPessoa(nome, endereco, dataNascimento, bonus, cpf, renda);
 
@@ -281,7 +353,7 @@ public class TelaSeguradoPessoa extends JFrame {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "Formato de data inválido. Use YYYY-MM-DD.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Formato de data inválido. Use DD/MM/YYYY.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Bônus ou Renda devem ser números válidos.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
