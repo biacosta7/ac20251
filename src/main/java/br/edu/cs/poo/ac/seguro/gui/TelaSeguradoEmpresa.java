@@ -233,7 +233,7 @@ public class TelaSeguradoEmpresa extends JFrame {
             return;
         }
 
-        limparCamposExceptCnpj();
+        limparCamposExcetoCnpj();
         tfCnpj.setEnabled(false);
         setCamposEditavel(true);
         btnNovo.setEnabled(false);
@@ -270,7 +270,7 @@ public class TelaSeguradoEmpresa extends JFrame {
             btnCancelar.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Empresa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            limparCamposExceptCnpj();
+            limparCamposExcetoCnpj();
             tfCnpj.setText(cnpj);
             setCamposEditavel(false);
             btnIncluir.setEnabled(false);
@@ -309,7 +309,7 @@ public class TelaSeguradoEmpresa extends JFrame {
         cbLocadora.setSelected(segurado.isEhLocadoraDeVeiculos());
     }
 
-    private void limparCamposExceptCnpj() {
+    private void limparCamposExcetoCnpj() {
         for (JTextField campo : campos) {
             campo.setText("");
         }

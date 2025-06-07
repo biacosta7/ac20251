@@ -32,7 +32,6 @@ public class TelaSinistro extends JFrame {
     private JButton btnLimpar;
 
     public TelaSinistro() {
-        // Apply Nimbus Look and Feel for a modern look
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -41,7 +40,6 @@ public class TelaSinistro extends JFrame {
                 }
             }
         } catch (Exception e) {
-            // Fallback to system default if Nimbus isn't available
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception ex) {
@@ -52,106 +50,105 @@ public class TelaSinistro extends JFrame {
         sinistroMediator = SinistroMediator.getInstancia();
 
         setTitle("Inclusão de Sinistro");
-        setSize(500, 420); // Adjusted size for better aesthetics with padding
+        setSize(500, 420);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false); // Keeps window fixed size
+        setResizable(false);
 
-        // Main content panel with padding and background
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // Generous padding
-        mainPanel.setBackground(new Color(240, 248, 255)); // AliceBlue background
-        add(mainPanel); // Add the main panel to the frame
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        mainPanel.setBackground(new Color(240, 248, 255));
+        add(mainPanel);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 10, 8, 10); // Padding for components
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Components fill their display area horizontally
-        gbc.anchor = GridBagConstraints.WEST; // Labels align to the left
+        gbc.insets = new Insets(8, 10, 8, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
 
-        // --- Placa ---
+        // Placa
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel lblPlaca = new JLabel("Placa:");
         lblPlaca.setFont(new Font("Segoe UI", Font.BOLD, 13));
         mainPanel.add(lblPlaca, gbc);
-        tfPlaca = new JTextField(20); // Wider field
+        tfPlaca = new JTextField(20);
         tfPlaca.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         mainPanel.add(tfPlaca, gbc);
 
-        // --- Data/Hora do Sinistro ---
+        // Data/Hora do Sinistro
         gbc.gridx = 0; gbc.gridy = 1;
         gbc.weightx = 0.0;
         JLabel lblDataHora = new JLabel("Data/Hora (dd-MM-yyyy HH:mm):");
         lblDataHora.setFont(new Font("Segoe UI", Font.BOLD, 13));
         mainPanel.add(lblDataHora, gbc);
         tfDataHoraSinistro = criarCampoDataHora();
-        tfDataHoraSinistro.setFont(new Font("Segoe UI", Font.PLAIN, 13)); // Apply font
+        tfDataHoraSinistro.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         mainPanel.add(tfDataHoraSinistro, gbc);
 
-        // --- Registro do Usuário ---
+        // registro do usuário
         gbc.gridx = 0; gbc.gridy = 2;
         gbc.weightx = 0.0;
         JLabel lblUsuario = new JLabel("Registro do Usuário:");
         lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
         mainPanel.add(lblUsuario, gbc);
-        tfUsuarioRegistro = new JTextField(20); // Wider field
-        tfUsuarioRegistro.setFont(new Font("Segoe UI", Font.PLAIN, 13)); // Apply font
+        tfUsuarioRegistro = new JTextField(20);
+        tfUsuarioRegistro.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         mainPanel.add(tfUsuarioRegistro, gbc);
 
-        // --- Valor do Sinistro ---
+        // valor do sinistro
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.weightx = 0.0;
         JLabel lblValorSinistro = new JLabel("Valor do Sinistro:");
         lblValorSinistro.setFont(new Font("Segoe UI", Font.BOLD, 13));
         mainPanel.add(lblValorSinistro, gbc);
         tfValorSinistro = criarCampoValor();
-        tfValorSinistro.setFont(new Font("Segoe UI", Font.PLAIN, 13)); // Apply font
+        tfValorSinistro.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         mainPanel.add(tfValorSinistro, gbc);
 
-        // --- Tipo de Sinistro ---
+        // tipo de sinistro
         gbc.gridx = 0; gbc.gridy = 4;
         gbc.weightx = 0.0;
         JLabel lblTipo = new JLabel("Tipo de Sinistro:");
         lblTipo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         mainPanel.add(lblTipo, gbc);
         cbTipo = new JComboBox<>(Arrays.stream(TipoSinistro.values())
-                .sorted(Comparator.comparing(Enum::name)) // Ordena por nome
+                .sorted(Comparator.comparing(Enum::name))
                 .toArray(TipoSinistro[]::new));
-        cbTipo.setFont(new Font("Segoe UI", Font.PLAIN, 13)); // Apply font
+        cbTipo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         mainPanel.add(cbTipo, gbc);
 
 
-        // --- Buttons Panel ---
-        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20)); // Increased spacing
-        panelBotoes.setBackground(new Color(240, 248, 255)); // Match main panel background
+        // buttons panel
+        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
+        panelBotoes.setBackground(new Color(240, 248, 255));
 
-        btnIncluir = new JButton("Registrar Sinistro"); // More descriptive button text
+        btnIncluir = new JButton("Registrar Sinistro");
         btnIncluir.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnIncluir.setBackground(new Color(60, 179, 113)); // MediumSeaGreen
+        btnIncluir.setBackground(new Color(60, 179, 113));
         btnIncluir.setForeground(Color.WHITE);
         btnIncluir.setFocusPainted(false);
         panelBotoes.add(btnIncluir);
 
-        btnLimpar = new JButton("Limpar Campos"); // More descriptive button text
+        btnLimpar = new JButton("Limpar Campos");
         btnLimpar.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnLimpar.setBackground(new Color(100, 149, 237)); // CornflowerBlue
+        btnLimpar.setBackground(new Color(100, 149, 237));
         btnLimpar.setForeground(Color.WHITE);
         btnLimpar.setFocusPainted(false);
         panelBotoes.add(btnLimpar);
 
         gbc.gridx = 0; gbc.gridy = 5;
-        gbc.gridwidth = 2; // Span both columns
-        gbc.fill = GridBagConstraints.NONE; // Buttons panel does not stretch horizontally
-        gbc.anchor = GridBagConstraints.CENTER; // Center the button panel
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(panelBotoes, gbc);
 
         addListeners();
@@ -171,7 +168,6 @@ public class TelaSinistro extends JFrame {
                 tfPlaca.requestFocusInWindow();
                 return;
             }
-            // MaskFormatter fields can have placeholders if not fully filled, check for them
             if (tfDataHoraSinistro.getText().trim().replace("_", "").isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o campo Data/Hora do Sinistro.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
                 tfDataHoraSinistro.requestFocusInWindow();
@@ -182,20 +178,18 @@ public class TelaSinistro extends JFrame {
                 tfUsuarioRegistro.requestFocusInWindow();
                 return;
             }
-            // For JFormattedTextField using NumberFormatter, check its actual value after commitEdit
-            if (tfValorSinistro.getText().trim().isEmpty()) { // Check text first for quick feedback
+            if (tfValorSinistro.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o campo Valor do Sinistro.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
                 tfValorSinistro.requestFocusInWindow();
                 return;
             }
 
-            // Commit edits for JFormattedTextFields before getting values
             try {
                 tfDataHoraSinistro.commitEdit();
                 tfValorSinistro.commitEdit();
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "Formato inválido para Data/Hora ou Valor do Sinistro. Verifique se os valores estão completos e corretos.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace(); // For debugging
+                ex.printStackTrace();
                 return;
             }
 
@@ -217,22 +211,18 @@ public class TelaSinistro extends JFrame {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             LocalDateTime dataHora = LocalDateTime.parse(tfDataHoraSinistro.getText(), formatter);
             String usuario = tfUsuarioRegistro.getText().trim();
-            double valor = valorBigDecimal.doubleValue(); // Convert BigDecimal to double for DadosSinistro if necessary
+            double valor = valorBigDecimal.doubleValue();
 
             TipoSinistro tipo = (TipoSinistro) cbTipo.getSelectedItem();
             int codigoTipoSinistro = tipo.getCodigo();
 
             DadosSinistro dados = new DadosSinistro(placa, dataHora, usuario, valor, codigoTipoSinistro);
-
-            // Call the mediator's inclusion method
-            // Note: The second parameter 'LocalDateTime.now()' might be a placeholder or for audit purposes.
-            // Ensure your mediator expects it, or remove/adjust if not needed.
             String numeroGerado = sinistroMediator.incluirSinistro(dados, LocalDateTime.now());
 
             JOptionPane.showMessageDialog(this,
                     "Sinistro incluído com sucesso!\nNúmero do sinistro: " + numeroGerado,
                     "Inclusão Bem Sucedida", JOptionPane.INFORMATION_MESSAGE);
-            limparCampos(); // Clear fields after successful inclusion
+            limparCampos();
 
         } catch (ExcecaoValidacaoDados evd) {
             StringBuilder mensagem = new StringBuilder("Não foi possível incluir o sinistro:\n");
@@ -257,48 +247,47 @@ public class TelaSinistro extends JFrame {
 
     private void limparCampos() {
         tfPlaca.setText("");
-        tfDataHoraSinistro.setValue(null); // Clears masked field properly
-        tfDataHoraSinistro.setText(""); // Ensure placeholder characters are reset
+        tfDataHoraSinistro.setValue(null);
+        tfDataHoraSinistro.setText("");
         tfUsuarioRegistro.setText("");
-        tfValorSinistro.setValue(BigDecimal.ZERO); // Resets to 0.00
+        tfValorSinistro.setValue(BigDecimal.ZERO);
         if (cbTipo.getItemCount() > 0) {
-            cbTipo.setSelectedIndex(0); // Selects the first item
+            cbTipo.setSelectedIndex(0);
         }
-        tfPlaca.requestFocusInWindow(); // Set focus back to the first field
+        tfPlaca.requestFocusInWindow();
     }
 
     private JFormattedTextField criarCampoDataHora() {
         try {
             MaskFormatter formatter = new MaskFormatter("##-##-#### ##:##");
             formatter.setPlaceholderCharacter('_');
-            formatter.setOverwriteMode(true); // Characters typed replace existing ones
+            formatter.setOverwriteMode(true);
             JFormattedTextField field = new JFormattedTextField(formatter);
-            field.setColumns(14); // Appropriate width for the mask
-            field.setValue(null); // Initial value to null
-            field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT); // Commit or revert on focus lost
+            field.setColumns(14);
+            field.setValue(null);
+            field.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
             return field;
         } catch (ParseException e) {
-            // Fallback if mask creation fails
             System.err.println("Error creating date/time mask: " + e.getMessage());
             return new JFormattedTextField();
         }
     }
 
     private JFormattedTextField criarCampoValor() {
-        NumberFormat format = NumberFormat.getNumberInstance(new Locale("pt", "BR")); // Use pt-BR locale
+        NumberFormat format = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);
-        format.setGroupingUsed(true); // For thousands separator
+        format.setGroupingUsed(true);
 
         NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(BigDecimal.class); // Use BigDecimal for precision
-        formatter.setAllowsInvalid(false); // Only allow valid numbers
-        formatter.setMinimum(BigDecimal.ZERO); // Minimum value is 0
-        formatter.setOverwriteMode(false); // Insert mode, not overwrite
+        formatter.setValueClass(BigDecimal.class);
+        formatter.setAllowsInvalid(false);
+        formatter.setMinimum(BigDecimal.ZERO);
+        formatter.setOverwriteMode(false);
         JFormattedTextField field = new JFormattedTextField(formatter);
-        field.setColumns(10); // Appropriate width
-        field.setValue(BigDecimal.ZERO); // Initial value
-        field.setFocusLostBehavior(JFormattedTextField.COMMIT); // Commit value when focus is lost
+        field.setColumns(10);
+        field.setValue(BigDecimal.ZERO);
+        field.setFocusLostBehavior(JFormattedTextField.COMMIT);
         return field;
     }
 

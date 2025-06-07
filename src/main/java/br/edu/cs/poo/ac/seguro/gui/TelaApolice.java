@@ -245,10 +245,10 @@ public class TelaApolice extends JFrame {
                 return;
             }
 
-            int selectedIndex = cmbCategoriaVeiculo.getSelectedIndex();
+            int indiceSelecionado = cmbCategoriaVeiculo.getSelectedIndex();
             CategoriaVeiculo categoriaSelecionada = null;
-            if (selectedIndex >= 0 && selectedIndex < categoriasOrdenadas.size()) {
-                categoriaSelecionada = categoriasOrdenadas.get(selectedIndex);
+            if (indiceSelecionado >= 0 && indiceSelecionado < categoriasOrdenadas.size()) {
+                categoriaSelecionada = categoriasOrdenadas.get(indiceSelecionado);
             }
             if (categoriaSelecionada == null) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecione uma categoria de veículo.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);

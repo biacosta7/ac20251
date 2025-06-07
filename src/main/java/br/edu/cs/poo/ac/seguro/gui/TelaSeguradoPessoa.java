@@ -81,7 +81,7 @@ public class TelaSeguradoPessoa extends JFrame {
         tfEstado = new JTextField();
         tfCidade = new JTextField();
         try {
-            MaskFormatter cepMask = new MaskFormatter("########"); // Apenas números, 8 dígitos
+            MaskFormatter cepMask = new MaskFormatter("########");
             tfCep = new JFormattedTextField(cepMask);
         } catch (ParseException e) {
             tfCep = new JFormattedTextField();
@@ -148,7 +148,6 @@ public class TelaSeguradoPessoa extends JFrame {
             y += rowHeight + spacing;
         }
 
-        // Agrupando todos os campos editáveis para controle de estado
         campos = new JTextField[]{
                 tfNome, tfDataNascimento, tfRenda, tfBonus,
                 tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
@@ -170,7 +169,7 @@ public class TelaSeguradoPessoa extends JFrame {
         btnCancelar.setBounds(340, y + 20, 90, 30);
         add(btnCancelar);
 
-        setFieldsEditable(false);
+        setCamposEditavel(false);
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(false);
@@ -180,31 +179,31 @@ public class TelaSeguradoPessoa extends JFrame {
         btnBuscar.addActionListener(e -> handleBuscarAction());
         btnIncluir.addActionListener(e -> incluirPessoa());
         btnExcluir.addActionListener(e -> excluirPessoa());
-        btnLimpar.addActionListener(e -> clearAllFieldsAndResetState());
+        btnLimpar.addActionListener(e -> limparCamposEResetarEstado());
         btnCancelar.addActionListener(e -> handleCancelarAction());
     }
 
-    private void setFieldsEditable(boolean editable) {
-        for (JTextField field : campos) { // Usar 'campos'
+    private void setCamposEditavel(boolean editable) {
+        for (JTextField field : campos) {
             field.setEnabled(editable);
         }
     }
 
-    private void clearAllFields() {
+    private void limparCampos() {
         tfCpf.setText("");
-        for (JTextField field : campos) { // Usar 'campos'
+        for (JTextField field : campos) {
             field.setText("");
         }
         tfRenda.setValue(0.00); // Limpa o campo de renda formatado
     }
 
-    private void clearAllFieldsAndResetState() {
-        clearAllFields();
+    private void limparCamposEResetarEstado() {
+        limparCampos();
         tfCpf.setEnabled(true);
         tfCpf.setText("");
         btnNovo.setEnabled(true);
         btnBuscar.setEnabled(true);
-        setFieldsEditable(false);
+        setCamposEditavel(false);
         btnIncluir.setText("Incluir");
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
@@ -227,9 +226,9 @@ public class TelaSeguradoPessoa extends JFrame {
             return;
         }
 
-        clearAllFieldsExceptCpf();
+        limparCamposExcetoCpf();
         tfCpf.setEnabled(false);
-        setFieldsEditable(true);
+        setCamposEditavel(true);
         btnNovo.setEnabled(false);
         btnBuscar.setEnabled(false);
         btnIncluir.setText("Incluir");
@@ -252,9 +251,9 @@ public class TelaSeguradoPessoa extends JFrame {
         SeguradoPessoa segurado = SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf);
 
         if (segurado != null) {
-            populateFields(segurado);
+            popularCampos(segurado);
             tfCpf.setEnabled(false);
-            setFieldsEditable(true);
+            setCamposEditavel(true);
             btnNovo.setEnabled(false);
             btnBuscar.setEnabled(false);
             btnIncluir.setText("Alterar");
@@ -264,9 +263,9 @@ public class TelaSeguradoPessoa extends JFrame {
             btnCancelar.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Pessoa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            clearAllFieldsExceptCpf();
+            limparCamposExcetoCpf();
             tfCpf.setText(cpf);
-            setFieldsEditable(false);
+            setCamposEditavel(false);
             btnIncluir.setEnabled(false);
             btnExcluir.setEnabled(false);
             btnLimpar.setEnabled(false);
@@ -275,7 +274,7 @@ public class TelaSeguradoPessoa extends JFrame {
         }
     }
 
-    private void populateFields(SeguradoPessoa segurado) {
+    private void popularCampos(SeguradoPessoa segurado) {
         tfNome.setText(segurado.getNome());
         Endereco endereco = segurado.getEndereco();
         if (endereco != null) {
@@ -302,7 +301,7 @@ public class TelaSeguradoPessoa extends JFrame {
         tfRenda.setValue(segurado.getRenda());
     }
 
-    private void clearAllFieldsExceptCpf() {
+    private void limparCamposExcetoCpf() {
         for (JTextField field : campos) { // Usar 'campos'
             field.setText("");
         }
@@ -312,7 +311,7 @@ public class TelaSeguradoPessoa extends JFrame {
     private void handleCancelarAction() {
         int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar ao estado inicial?", "Cancelar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            clearAllFieldsAndResetState();
+            limparCamposEResetarEstado();
         }
     }
 
@@ -346,7 +345,7 @@ public class TelaSeguradoPessoa extends JFrame {
 
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Operação realizada com sucesso!");
-                clearAllFieldsAndResetState();
+                limparCamposEResetarEstado();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -373,7 +372,7 @@ public class TelaSeguradoPessoa extends JFrame {
             String erro = SeguradoPessoaMediator.getInstancia().excluirSeguradoPessoa(cpf);
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Pessoa excluída com sucesso.");
-                clearAllFieldsAndResetState();
+                limparCamposEResetarEstado();
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }
