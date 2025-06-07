@@ -11,6 +11,12 @@ public class ExcecaoValidacaoDados extends Exception {
         this.mensagens = new ArrayList<>();
     }
 
+    public ExcecaoValidacaoDados(String mensagem) {
+        super(mensagem);
+        this.mensagens = new ArrayList<>();
+        this.mensagens.add(mensagem);
+    }
+
     public List<String> getMensagens() {
         return mensagens;
     }
