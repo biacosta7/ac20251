@@ -1,7 +1,6 @@
 package br.edu.cs.poo.ac.seguro.gui.pessoa;
 
 import javax.swing.*;
-import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -12,31 +11,30 @@ import br.edu.cs.poo.ac.seguro.mediators.SeguradoPessoaMediator;
 
 public class TelaSeguradoPessoa extends JFrame {
 
-    private JTextField tfCpf; // Changed from tfCnpj to tfCpf
-    private JTextField tfLogradouro, tfCep, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade, tfNome, tfDataNascimento, tfBonus, tfRenda; // Renamed tfData to tfDataNascimento, added tfRenda
+    private JTextField tfCpf;
+    private JTextField tfLogradouro, tfCep, tfNumero, tfComplemento, tfPais, tfEstado, tfCidade, tfNome, tfDataNascimento, tfBonus, tfRenda;
 
     private JButton btnNovo;
     private JButton btnBuscar;
-    private JButton btnIncluir; // Will change to "Alterar"
+    private JButton btnIncluir;
     private JButton btnExcluir;
     private JButton btnLimpar;
     private JButton btnCancelar;
 
-    private JTextField[] dataFields; // Array of all data entry fields (excluding CPF)
+    private JTextField[] dataFields;
 
     public TelaSeguradoPessoa() {
-        setTitle("Cadastro de Segurado Pessoa"); // Updated title
+        setTitle("Cadastro de Segurado Pessoa");
         setSize(500, 650);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        // --- CPF and Top Buttons ---
-        JLabel lblCpf = new JLabel("CPF:"); // Changed label to CPF
+        JLabel lblCpf = new JLabel("CPF:");
         lblCpf.setBounds(50, 20, 80, 25);
         add(lblCpf);
 
-        tfCpf = new JTextField(); // Changed from tfCnpj to tfCpf
+        tfCpf = new JTextField();
         tfCpf.setBounds(130, 20, 150, 25);
         add(tfCpf);
 
@@ -48,7 +46,6 @@ public class TelaSeguradoPessoa extends JFrame {
         btnBuscar.setBounds(390, 20, 80, 25);
         add(btnBuscar);
 
-        // --- Fields for SeguradoPessoa details ---
         tfNome = new JTextField();
         tfLogradouro = new JTextField();
         tfNumero = new JTextField();
@@ -57,25 +54,24 @@ public class TelaSeguradoPessoa extends JFrame {
         tfPais = new JTextField();
         tfEstado = new JTextField();
         tfCidade = new JTextField();
-        tfDataNascimento = new JTextField(); // Renamed
+        tfDataNascimento = new JTextField();
         tfBonus = new JTextField();
-        tfRenda = new JTextField(); // Added tfRenda
+        tfRenda = new JTextField();
 
         JLabel[] labels = {
                 new JLabel("Nome:"),
                 new JLabel("Logradouro:"), new JLabel("Número:"), new JLabel("Complemento:"),
                 new JLabel("CEP:"), new JLabel("País:"), new JLabel("Estado:"), new JLabel("Cidade:"),
-                new JLabel("Data Nascimento (YYYY-MM-DD):"), // Changed label
+                new JLabel("Data Nascimento (YYYY-MM-DD):"),
                 new JLabel("Bônus:"),
-                new JLabel("Renda:") // Added label
+                new JLabel("Renda:")
         };
 
-        dataFields = new JTextField[]{ // Array of fields to enable/disable
+        dataFields = new JTextField[]{
                 tfNome, tfLogradouro, tfNumero, tfComplemento, tfCep, tfPais, tfEstado, tfCidade,
-                tfDataNascimento, tfBonus, tfRenda // Updated fields
+                tfDataNascimento, tfBonus, tfRenda
         };
 
-        // Layout for data fields
         int y = 60;
         int labelX = 50;
         int fieldX = 200;
@@ -92,15 +88,6 @@ public class TelaSeguradoPessoa extends JFrame {
             y += rowHeight + spacing;
         }
 
-        // SeguradoPessoa does not have 'ehLocadora'
-        // So, remove the cbLocadora and its bounds.
-        // If there was a specific checkbox for Pessoa, it would go here.
-        // For now, y can just continue from the last text field.
-        // cbLocadora.setBounds(fieldX, y, fieldWidth, 25);
-        // add(cbLocadora);
-        // y += rowHeight + spacing;
-
-        // --- Bottom Action Buttons ---
         btnIncluir = new JButton("Incluir");
         btnIncluir.setBounds(40, y + 20, 90, 30);
         add(btnIncluir);
@@ -117,20 +104,16 @@ public class TelaSeguradoPessoa extends JFrame {
         btnCancelar.setBounds(340, y + 20, 90, 30);
         add(btnCancelar);
 
-        // --- Initial State Setup ---
-        setFieldsEditable(false); // All data fields start as disabled
-        // No cbLocadora for Pessoa, so remove its enable/disable line here
-        // cbLocadora.setEnabled(false);
+        setFieldsEditable(false);
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(false);
         btnCancelar.setEnabled(false);
 
-        // --- Action Listeners ---
         btnNovo.addActionListener(e -> handleNovoAction());
         btnBuscar.addActionListener(e -> handleBuscarAction());
-        btnIncluir.addActionListener(e -> incluirPessoa()); // Changed to incluirPessoa
-        btnExcluir.addActionListener(e -> excluirPessoa()); // Changed to excluirPessoa
+        btnIncluir.addActionListener(e -> incluirPessoa());
+        btnExcluir.addActionListener(e -> excluirPessoa());
         btnLimpar.addActionListener(e -> clearAllFieldsAndResetState());
         btnCancelar.addActionListener(e -> handleCancelarAction());
     }
@@ -139,55 +122,47 @@ public class TelaSeguradoPessoa extends JFrame {
         for (JTextField field : dataFields) {
             field.setEnabled(editable);
         }
-        // No cbLocadora for Pessoa
-        // cbLocadora.setEnabled(editable);
     }
 
     private void clearAllFields() {
-        tfCpf.setText(""); // Changed from tfCnpj
+        tfCpf.setText("");
         for (JTextField field : dataFields) {
             field.setText("");
         }
-        // No cbLocadora for Pessoa
-        // cbLocadora.setSelected(false);
     }
 
     private void clearAllFieldsAndResetState() {
         clearAllFields();
-        tfCpf.setEnabled(true); // Changed from tfCnpj
-        tfCpf.setText(""); // Ensure CPF is also cleared
+        tfCpf.setEnabled(true);
+        tfCpf.setText("");
         btnNovo.setEnabled(true);
         btnBuscar.setEnabled(true);
         setFieldsEditable(false);
-        btnIncluir.setText("Incluir"); // Reset button text
+        btnIncluir.setText("Incluir");
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
         btnLimpar.setEnabled(false);
         btnCancelar.setEnabled(false);
-        tfCpf.requestFocusInWindow(); // Focus on CPF for new operation
+        tfCpf.requestFocusInWindow();
     }
 
     private void handleNovoAction() {
-        String cpf = tfCpf.getText().trim(); // Changed from cnpj to cpf
-        if (cpf.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, digite o CPF para um novo cadastro.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        // Basic CPF validation (assuming 11 digits)
-        if (!cpf.matches("\\d{11}")) { // Changed from 14 to 11 for CPF
-            JOptionPane.showMessageDialog(this, "CPF inválido. Digite 11 dígitos.", "Erro de CPF", JOptionPane.ERROR_MESSAGE);
+        String cpf = tfCpf.getText().trim();
+        String validacaoCpf = SeguradoPessoaMediator.getInstancia().validarCpf(cpf);
+
+        if (validacaoCpf != null) {
+            JOptionPane.showMessageDialog(this, validacaoCpf, "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Check if CPF already exists (using SeguradoPessoaMediator)
-        if (SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf) != null) { // Changed mediator call
+        if (SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf) != null) {
             JOptionPane.showMessageDialog(this, "CPF já cadastrado. Use 'Buscar' para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        clearAllFieldsExceptCpf(); // Changed from Cnpj to Cpf
-        tfCpf.setEnabled(false); // Lock CPF for new entry
-        setFieldsEditable(true); // Enable other fields for input
+        clearAllFieldsExceptCpf();
+        tfCpf.setEnabled(false);
+        setFieldsEditable(true);
         btnNovo.setEnabled(false);
         btnBuscar.setEnabled(false);
         btnIncluir.setText("Incluir");
@@ -199,22 +174,19 @@ public class TelaSeguradoPessoa extends JFrame {
     }
 
     private void handleBuscarAction() {
-        String cpf = tfCpf.getText().trim(); // Changed from cnpj to cpf
-        if (cpf.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, digite o CPF para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        // Basic CPF validation
-        if (!cpf.matches("\\d{11}")) { // Changed from 14 to 11 for CPF
-            JOptionPane.showMessageDialog(this, "CPF inválido. Digite 11 dígitos.", "Erro de CPF", JOptionPane.ERROR_MESSAGE);
+        String cpf = tfCpf.getText().trim();
+        String validacaoCpf = SeguradoPessoaMediator.getInstancia().validarCpf(cpf);
+
+        if (validacaoCpf != null) {
+            JOptionPane.showMessageDialog(this, validacaoCpf, "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        SeguradoPessoa segurado = SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf); // Changed mediator call
+        SeguradoPessoa segurado = SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf);
 
         if (segurado != null) {
             populateFields(segurado);
-            tfCpf.setEnabled(false); // Lock CPF
+            tfCpf.setEnabled(false);
             setFieldsEditable(true);
             btnNovo.setEnabled(false);
             btnBuscar.setEnabled(false);
@@ -225,8 +197,8 @@ public class TelaSeguradoPessoa extends JFrame {
             btnCancelar.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Pessoa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            clearAllFieldsExceptCpf(); // Changed from Cnpj to Cpf
-            tfCpf.setText(cpf); // Keep the entered CPF
+            clearAllFieldsExceptCpf();
+            tfCpf.setText(cpf);
             setFieldsEditable(false);
             btnIncluir.setEnabled(false);
             btnExcluir.setEnabled(false);
@@ -248,7 +220,6 @@ public class TelaSeguradoPessoa extends JFrame {
             tfEstado.setText(endereco.getEstado());
             tfCidade.setText(endereco.getCidade());
         } else {
-            // Clear address fields if no address is associated
             tfLogradouro.setText("");
             tfCep.setText("");
             tfNumero.setText("");
@@ -258,19 +229,15 @@ public class TelaSeguradoPessoa extends JFrame {
             tfCidade.setText("");
         }
 
-        tfDataNascimento.setText(segurado.getDataNascimento() != null ? segurado.getDataNascimento().toString() : ""); // Changed to DataNascimento
+        tfDataNascimento.setText(segurado.getDataNascimento() != null ? segurado.getDataNascimento().toString() : "");
         tfBonus.setText(segurado.getBonus() != null ? segurado.getBonus().toPlainString() : "");
-        tfRenda.setText(String.valueOf(segurado.getRenda())); // Set Renda field
-        // No cbLocadora for Pessoa
-        // cbLocadora.setSelected(false);
+        tfRenda.setText(String.valueOf(segurado.getRenda()));
     }
 
-    private void clearAllFieldsExceptCpf() { // Changed from Cnpj to Cpf
+    private void clearAllFieldsExceptCpf() {
         for (JTextField field : dataFields) {
             field.setText("");
         }
-        // No cbLocadora for Pessoa
-        // cbLocadora.setSelected(false);
     }
 
     private void handleCancelarAction() {
@@ -280,12 +247,8 @@ public class TelaSeguradoPessoa extends JFrame {
         }
     }
 
-    private void incluirPessoa() { // Changed method name
-        String cpf = tfCpf.getText().trim(); // Changed from cnpj to cpf
-        if (cpf.isEmpty() || !cpf.matches("\\d{11}")) { // Changed validation
-            JOptionPane.showMessageDialog(this, "CPF inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    private void incluirPessoa() {
+        String cpf = tfCpf.getText().trim();
 
         try {
             String nome = tfNome.getText();
@@ -298,17 +261,17 @@ public class TelaSeguradoPessoa extends JFrame {
                     tfEstado.getText(),
                     tfCidade.getText()
             );
-            LocalDate dataNascimento = LocalDate.parse(tfDataNascimento.getText()); // Changed to DataNascimento
+            LocalDate dataNascimento = LocalDate.parse(tfDataNascimento.getText());
             BigDecimal bonus = new BigDecimal(tfBonus.getText());
-            double renda = Double.parseDouble(tfRenda.getText()); // Get Renda
+            double renda = Double.parseDouble(tfRenda.getText());
 
-            SeguradoPessoa seg = new SeguradoPessoa(nome, endereco, dataNascimento, bonus, cpf, renda); // Changed constructor parameters
+            SeguradoPessoa seg = new SeguradoPessoa(nome, endereco, dataNascimento, bonus, cpf, renda);
 
             String erro;
             if (btnIncluir.getText().equals("Incluir")) {
-                erro = SeguradoPessoaMediator.getInstancia().incluirSeguradoPessoa(seg); // Changed mediator call
-            } else { // "Alterar"
-                erro = SeguradoPessoaMediator.getInstancia().alterarSeguradoPessoa(seg); // Changed mediator call
+                erro = SeguradoPessoaMediator.getInstancia().incluirSeguradoPessoa(seg);
+            } else {
+                erro = SeguradoPessoaMediator.getInstancia().alterarSeguradoPessoa(seg);
             }
 
             if (erro == null) {
@@ -320,22 +283,24 @@ public class TelaSeguradoPessoa extends JFrame {
         } catch (DateTimeParseException ex) {
             JOptionPane.showMessageDialog(this, "Formato de data inválido. Use YYYY-MM-DD.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Bônus ou Renda devem ser números válidos.", "Erro de Dados", JOptionPane.ERROR_MESSAGE); // Changed message
+            JOptionPane.showMessageDialog(this, "Bônus ou Renda devem ser números válidos.", "Erro de Dados", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao processar dados: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void excluirPessoa() { // Changed method name
-        String cpf = tfCpf.getText().trim(); // Changed from cnpj to cpf
-        if (cpf.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "CPF não pode estar vazio para exclusão.", "Erro", JOptionPane.ERROR_MESSAGE);
+    private void excluirPessoa() {
+        String cpf = tfCpf.getText().trim();
+        String validacaoCpf = SeguradoPessoaMediator.getInstancia().validarCpf(cpf);
+
+        if (validacaoCpf != null) {
+            JOptionPane.showMessageDialog(this, validacaoCpf, "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir a pessoa com CPF: " + cpf + "?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            String erro = SeguradoPessoaMediator.getInstancia().excluirSeguradoPessoa(cpf); // Changed mediator call
+            String erro = SeguradoPessoaMediator.getInstancia().excluirSeguradoPessoa(cpf);
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Pessoa excluída com sucesso.");
                 clearAllFieldsAndResetState();
