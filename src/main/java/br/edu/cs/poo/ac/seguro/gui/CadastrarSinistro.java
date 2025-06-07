@@ -161,9 +161,9 @@ public class CadastrarSinistro extends JFrame {
             double valor = valorBigDecimal.doubleValue(); // Converte para double conforme DadosSinistro
 
             TipoSinistro tipo = (TipoSinistro) cbTipo.getSelectedItem();
-            int tipoOrdinal = tipo.ordinal(); // O ordinal do enum
+            int codigoTipoSinistro = tipo.getCodigo();
 
-            DadosSinistro dados = new DadosSinistro(placa, dataHora, usuario, valor, tipoOrdinal);
+            DadosSinistro dados = new DadosSinistro(placa, dataHora, usuario, valor, codigoTipoSinistro);
 
             String numeroGerado = SinistroMediator.getInstancia().incluirSinistro(dados, LocalDateTime.now()); // Passa LocalDateTime.now() para o registro no mediador
 
