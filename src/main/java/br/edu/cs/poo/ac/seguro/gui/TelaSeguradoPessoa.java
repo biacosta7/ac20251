@@ -243,7 +243,7 @@ public class TelaSeguradoPessoa extends JFrame {
         addressDetailsPanel.add(lblCep, adpGbc);
         adpGbc.gridx = 1; adpGbc.weightx = 1.0;
         try {
-            MaskFormatter cepMask = new MaskFormatter("########"); // Only numbers, 8 digits
+            MaskFormatter cepMask = new MaskFormatter("########");
             tfCep = new JFormattedTextField(cepMask);
         } catch (ParseException e) {
             tfCep = new JFormattedTextField();
@@ -287,9 +287,71 @@ public class TelaSeguradoPessoa extends JFrame {
         editableFields.add(tfComplemento);
 
 
+
         // --- Action Buttons Panel ---
         JPanel actionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15)); // Spacing between buttons
         actionButtonsPanel.setBackground(new Color(240, 248, 255)); // Match main panel background
+
+        // Ordem dos campos
+        JLabel[] labels = {
+                new JLabel("Nome:"),
+                new JLabel("Data Nascimento (DD/MM/YYYY):"),
+                new JLabel("Renda:"),
+                new JLabel("Bônus:")
+        };
+
+        JTextField[] fields = {
+                tfNome, tfDataNascimento, tfRenda, tfBonus
+        };
+
+        int y = 60;
+        int labelX = 50;
+        int fieldX = 220;
+        int labelWidth = 160;
+        int fieldWidth = 250;
+        int rowHeight = 30;
+        int spacing = 5;
+
+        for (int i = 0; i < labels.length; i++) {
+            labels[i].setBounds(labelX, y, labelWidth, 25);
+            fields[i].setBounds(fieldX, y, fieldWidth, 25);
+            add(labels[i]);
+            add(fields[i]);
+            y += rowHeight + spacing;
+        }
+
+        JLabel lblEnderecoTitle = new JLabel("Endereço");
+        lblEnderecoTitle.setBounds(labelX, y + 10, labelWidth + fieldWidth, 25);
+        lblEnderecoTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        add(lblEnderecoTitle);
+        y += rowHeight + 20;
+
+        JLabel[] enderecoLabels = {
+                new JLabel("País:"),
+                new JLabel("Estado:"),
+                new JLabel("Cidade:"),
+                new JLabel("CEP:"),
+                new JLabel("Logradouro:"),
+                new JLabel("Número:"),
+                new JLabel("Complemento:")
+        };
+
+        JTextField[] enderecoFields = {
+                tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
+
+        for (int i = 0; i < enderecoLabels.length; i++) {
+            enderecoLabels[i].setBounds(labelX, y, labelWidth, 25);
+            enderecoFields[i].setBounds(fieldX, y, fieldWidth, 25);
+            add(enderecoLabels[i]);
+            add(enderecoFields[i]);
+            y += rowHeight + spacing;
+        }
+
+        campos = new JTextField[]{
+                tfNome, tfDataNascimento, tfRenda, tfBonus,
+                tfPais, tfEstado, tfCidade, tfCep, tfLogradouro, tfNumero, tfComplemento
+        };
 
         btnIncluir = new JButton("Incluir");
         btnIncluir.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -337,7 +399,7 @@ public class TelaSeguradoPessoa extends JFrame {
         btnBuscar.addActionListener(e -> handleBuscarAction());
         btnIncluir.addActionListener(e -> incluirPessoa());
         btnExcluir.addActionListener(e -> excluirPessoa());
-        btnLimpar.addActionListener(e -> clearAllFieldsAndResetState());
+        btnLimpar.addActionListener(e -> limparCamposEResetarEstado());
         btnCancelar.addActionListener(e -> handleCancelarAction());
     }
 
@@ -349,11 +411,13 @@ public class TelaSeguradoPessoa extends JFrame {
             if (comp instanceof JTextField) {
                 ((JTextField) comp).setBackground(editable ? Color.WHITE : new Color(230, 230, 230)); // Light gray when disabled
             }
+
         }
     }
 
-    private void clearAllFields() {
+    private void limparCampos() {
         tfCpf.setText("");
+
         tfNome.setText("");
         tfDataNascimento.setText("");
         tfRenda.setValue(BigDecimal.ZERO); // Reset to BigDecimal.ZERO
@@ -365,10 +429,11 @@ public class TelaSeguradoPessoa extends JFrame {
         tfLogradouro.setText("");
         tfNumero.setText("");
         tfComplemento.setText("");
+
     }
 
-    private void clearAllFieldsAndResetState() {
-        clearAllFields();
+    private void limparCamposEResetarEstado() {
+        limparCampos();
         tfCpf.setEnabled(true);
         tfCpf.setBackground(Color.WHITE); // Ensure CPF field is white
         btnNovo.setEnabled(true);
@@ -398,10 +463,11 @@ public class TelaSeguradoPessoa extends JFrame {
             return;
         }
 
-        clearAllFieldsExceptCpf();
+        limparCamposExcetoCpf();
         tfCpf.setEnabled(false);
         tfCpf.setBackground(new Color(230, 230, 230)); // Gray out CPF field
         setFieldsEditable(true);
+
         btnNovo.setEnabled(false);
         btnBuscar.setEnabled(false);
         btnIncluir.setText("Incluir");
@@ -425,10 +491,11 @@ public class TelaSeguradoPessoa extends JFrame {
         SeguradoPessoa segurado = SeguradoPessoaMediator.getInstancia().buscarSeguradoPessoa(cpf);
 
         if (segurado != null) {
-            populateFields(segurado);
+            popularCampos(segurado);
             tfCpf.setEnabled(false);
             tfCpf.setBackground(new Color(230, 230, 230)); // Gray out CPF field
             setFieldsEditable(true);
+
             btnNovo.setEnabled(false);
             btnBuscar.setEnabled(false);
             btnIncluir.setText("Alterar");
@@ -439,9 +506,11 @@ public class TelaSeguradoPessoa extends JFrame {
             JOptionPane.showMessageDialog(this, "Pessoa encontrada e dados preenchidos.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             tfNome.requestFocusInWindow(); // Set focus to first editable field
         } else {
+
             clearAllFieldsExceptCpf();
-            tfCpf.setText(cpf); // Keep CPF for user reference
-            setFieldsEditable(false); // All fields disabled except CPF
+            tfCpf.setText(cpf); 
+            setFieldsEditable(false);
+
             btnIncluir.setEnabled(false);
             btnExcluir.setEnabled(false);
             btnLimpar.setEnabled(false);
@@ -451,7 +520,7 @@ public class TelaSeguradoPessoa extends JFrame {
         }
     }
 
-    private void populateFields(SeguradoPessoa segurado) {
+    private void popularCampos(SeguradoPessoa segurado) {
         tfNome.setText(segurado.getNome());
         Endereco endereco = segurado.getEndereco();
         if (endereco != null) {
@@ -497,7 +566,7 @@ public class TelaSeguradoPessoa extends JFrame {
     private void handleCancelarAction() {
         int confirm = JOptionPane.showConfirmDialog(this, "Deseja descartar as alterações e retornar ao estado inicial?", "Cancelar Operação", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
-            clearAllFieldsAndResetState();
+            limparCamposEResetarEstado();
         }
     }
 
@@ -594,6 +663,7 @@ public class TelaSeguradoPessoa extends JFrame {
             if (erro == null) {
                 JOptionPane.showMessageDialog(this, "Operação realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 clearAllFieldsAndResetState();
+
             } else {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
             }

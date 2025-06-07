@@ -491,10 +491,11 @@ public class TelaSeguradoEmpresa extends JFrame {
             tfNome.requestFocusInWindow();
         } else {
             limparCamposExceptCnpj(); // Clear other fields
-            // tfCnpj.setText(cnpj); // Keep CNPJ for user reference (already there)
+            tfCnpj.setText(cnpj); // Keep CNPJ for user reference (already there)
             setCamposEditavel(false); // Disable all other editable fields
             tfCnpj.setEnabled(true); // Keep CNPJ enabled for next action
             tfCnpj.setBackground(Color.WHITE); // Ensure CNPJ is white
+
             btnIncluir.setEnabled(false);
             btnExcluir.setEnabled(false);
             btnLimpar.setEnabled(false);
@@ -539,6 +540,7 @@ public class TelaSeguradoEmpresa extends JFrame {
         tfData.setText("");
         tfFaturamento.setValue(BigDecimal.ZERO);
         tfBonus.setText("");
+
         cbLocadora.setSelected(false);
         tfPais.setText("");
         tfEstado.setText("");
